@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Formik } from "formik";
 import { StyleSheet, View } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import {
   getTodayActivities,
   saveTodayActivity,
@@ -10,11 +11,17 @@ import { Input, Button, Text, ListItem, Icon } from "@rneui/themed";
 
 export default function ActivityCards({ navigation }) {
   const [expanded, setExpanded] = useState({ 0: false });
+  const [showStartTimeDatePicker, setShowStartTimeDatePicker] = useState({
+    0: false,
+  });
+  const [showEndTimeDatePicker, setShowEndTimeDatePicker] = useState({
+    0: false,
+  });
   const [runFetch, setRunFetch] = useState(0);
   const [activities, setActivities] = useState({
     0: {
-      start_time: "",
-      end_time: "",
+      start_time: new Date(),
+      end_time: new Date(),
       duration: "",
       name: "",
       location: "",
@@ -30,7 +37,7 @@ export default function ActivityCards({ navigation }) {
   }, [runFetch]);
   return (
     <Formik initialValues={activities} enableReinitialize>
-      {({ handleChange, setValues, values }) => (
+      {({ handleChange, setValues, setFieldValue, values }) => (
         <View>
           <Text h4>Add your schedule for today!</Text>
           {Object.entries(values).map(([key, value]) => (
@@ -50,22 +57,76 @@ export default function ActivityCards({ navigation }) {
                     value={value.name}
                   />
                   <Input
-                    placeholder="Input location of activity"
+                    placeholder="Input location"
                     onChangeText={handleChange(`${key}.location`)}
                     value={value.location}
                   />
+                  <View style={styles.timePicker}>
+                    <Input
+                      placeholder="Input start time"
+                      editable={false}
+                      value={value.start_time.toLocaleTimeString()}
+                    />
+                    <Button
+                      onPress={() =>
+                        setShowStartTimeDatePicker({
+                          ...showStartTimeDatePicker,
+                          [key]: !showStartTimeDatePicker[key],
+                        })
+                      }
+                    >
+                      Input
+                    </Button>
+                  </View>
+
+                  {showStartTimeDatePicker[key] && (
+                    <DateTimePicker
+                      mode="time"
+                      value={value.start_time}
+                      onChange={(event, time) => {
+                        setShowStartTimeDatePicker({
+                          ...showStartTimeDatePicker,
+                          [key]: !showStartTimeDatePicker[key],
+                        });
+                        setFieldValue(`${key}.start_time`, time);
+                        console.info(time);
+                      }}
+                    />
+                  )}
+                  <View style={styles.timePicker}>
+                    <Input
+                      placeholder="Input end time"
+                      editable={false}
+                      value={value.end_time.toLocaleTimeString()}
+                    />
+                    <Button
+                      onPress={() =>
+                        setShowEndTimeDatePicker({
+                          ...showEndTimeDatePicker,
+                          [key]: !showEndTimeDatePicker[key],
+                        })
+                      }
+                    >
+                      Input
+                    </Button>
+                  </View>
+                  {showEndTimeDatePicker[key] && (
+                    <DateTimePicker
+                      mode="time"
+                      value={value.end_time}
+                      onChange={(event, time) => {
+                        setShowEndTimeDatePicker({
+                          ...showEndTimeDatePicker,
+                          [key]: !showEndTimeDatePicker[key],
+                        });
+                        setFieldValue(`${key}.end_time`, time);
+                        console.info(value.end_time);
+                      }}
+                    />
+                  )}
                   <Input
-                    placeholder="Input start time of activity"
-                    onChangeText={handleChange(`${key}.start_time`)}
-                    value={value.start_time}
-                  />
-                  <Input
-                    placeholder="Input end time of activity"
-                    onChangeText={handleChange(`${key}.end_time`)}
-                    value={value.end_time}
-                  />
-                  <Input
-                    placeholder="Input duration of activity (minutes)"
+                       keyboardType='numeric'
+                       placeholder="Input duration (minutes)"
                     onChangeText={handleChange(`${key}.duration`)}
                     value={value.duration}
                   />
@@ -77,7 +138,7 @@ export default function ActivityCards({ navigation }) {
                       } else {
                         await saveTodayActivity(value);
                       }
-                      setRunFetch(runFetch+1)
+                      setRunFetch(runFetch + 1);
                     }}
                   >
                     Add
@@ -94,8 +155,8 @@ export default function ActivityCards({ navigation }) {
               setValues({
                 ...values,
                 [newKey]: {
-                  start_time: "",
-                  end_time: "",
+                  start_time: new Date(),
+                  end_time: new Date(),
                   duration: "",
                   name: "",
                   location: "",
@@ -119,6 +180,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  timePicker: {
+    flexDirection: "row",
+    // width:"100%",
+    // alignItems: "center",
+    // justifyContent: "center",
   },
   button: {
     width: "50px",

@@ -129,6 +129,7 @@ const updateTodayActivity = async (_id, activity) => {
 
 const getTodayActivities = async () => {
   try {
+    // await AsyncStorage.clear();
     const activities = await getData("today_activities");
     console.log(activities)
     return JSON.parse(activities);
