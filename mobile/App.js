@@ -22,7 +22,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {true ? (
+        {false ? (
           <>
           <Stack.Screen
             name="Signup"

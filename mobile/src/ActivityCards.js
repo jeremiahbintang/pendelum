@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
-import { getActivities } from "../storage"
+import { getTodayActivities } from "../storage"
 
 export default function ActivityCards({ navigation }) {
   const [activities, setActivities] = useState([]);
   useEffect(() => {
-    const fetchActivities = async () => await getActivities()
+    const fetchActivities = async () => await getTodayActivities()
     const activities = fetchActivities()
     if (Array.isArray(activities)){
         setActivities(activities)
@@ -15,11 +15,7 @@ export default function ActivityCards({ navigation }) {
   return (
     <View style={styles.container}>
       <Text>Your schedule for today!</Text>
-      <Text>Activity 1</Text>
-      <Text>Activity 2</Text>
-      <Text>Activity 3</Text>
-      <Text>Activity 4</Text>
-      <Text>Activity 5</Text>
+      {activities.map((activity)=> <Text>{activity.name}</Text>)}
     </View>
   );
 }

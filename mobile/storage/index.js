@@ -56,47 +56,119 @@ const deletePhoneNumber = async () => {
   }
 };
 
-const getActivities = async () => {
+
+const getPublishStatus = async () => {
   try {
-    const activities = await getData("activities");
+    await getData("is_published")
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+const publishTodayActivities = async () => {
+  try {
+    await storeData("is_published", true)
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+const editTodayActivities = async () => {
+  try {
+    await storeData("is_published", false)
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+
+const saveTodayActivities = async (activities) => {
+  try {
+    const activitiesString = JSON.stringify(activities);
+    await storeData("today_activities", activitiesString);
+  } catch (e) {
+    // saving error
+    console.error(e);
+  }
+};
+
+const getTodayActivity = async (_id) => {
+  try {
+    const activities = await getData("today_activities");
+    const activitiesJSON = JSON.parse(activities);
+    const res = activitiesJSON?.find((val) => val._id === _id)
     
-    return activities;
-  } catch (e) {
-    // saving error
-    console.error(e);
-  }
-};
-
-const saveActivity = async (activity) => {
-  try {
-    const activities = await getActivities();
-    let activitiesJSON = JSON.parse(activities);
-
-    let activityJSON = JSON.stringify(activity);
-    activityJSON._id = uuid.v4();
-
-    if (activitiesJSON) {
-      activitiesJSON.push(activityJSON);
-    } else {
-      activityJSON = [activityJSON];
+    if (res) {
+      return res
     }
-    await storeData("activities", activitiesJSON);
+    return null;
   } catch (e) {
     // saving error
     console.error(e);
   }
 };
 
-const deleteActivity = async (_id) => {
+
+const updateTodayActivity = async (_id, activity) => {
   try {
-    const activities = await getActivities();
+    const activities = await getData("today_activities");
+    const activitiesJSON = JSON.parse(activities);
+    const index = activitiesJSON?.findIndex((val) => val._id === _id)
+    
+    if (index) {
+      activitiesJSON[index] = activity;
+      await saveTodayActivities(activitiesJSON)
+    }
+    return null;
+  } catch (e) {
+    // saving error
+    console.error(e);
+  }
+};
+
+
+const getTodayActivities = async () => {
+  try {
+    const activities = await getData("today_activities");
+    console.log(activities)
+    return JSON.parse(activities);
+  } catch (e) {
+    // saving error
+    console.error(e);
+  }
+};
+
+const saveTodayActivity = async (activity) => {
+  try {
+    const activities = await getTodayActivities();
+
+    activity._id = uuid.v4();
+
+    if (activities) {
+      activities.push(activity);
+    } else {
+      activities = [activity];
+    }
+    const activitiesString = await JSON.stringify(activities)
+    console.info(`Storing today activity data ${activity.name}`)
+    await storeData("today_activities", activitiesString);
+    return activity;
+  } catch (e) {
+    // saving error
+    console.error(e);
+  }
+};
+
+const deleteTodayActivity = async (_id) => {
+  try {
+    const activities = await getTodayActivities();
     let activitiesJSON = JSON.parse(activities);
     const index = activitiesJSON.findIndex((activity) => activity._id === _id);
     if (index > -1) {
       // only splice array when item is found
       activitiesJSON.splice(index, 1); // 2nd parameter means remove one item only
     }
-    await removeData("activities");
+    await removeData("today_activities");
   } catch (e) {
     // saving error
     console.error(e);
@@ -107,7 +179,11 @@ export {
   savePhoneNumber,
   getPhoneNumber,
   deletePhoneNumber,
-  getActivities,
-  saveActivity,
-  deleteActivity,
+  getTodayActivities,
+  updateTodayActivity,
+  saveTodayActivity,
+  deleteTodayActivity,
+  publishTodayActivities,
+  editTodayActivities,
+  getPublishStatus
 };
