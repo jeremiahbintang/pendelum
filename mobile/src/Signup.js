@@ -1,19 +1,10 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
-import { getPhoneNumber, savePhoneNumber } from "../storage";
+import { savePhoneNumber } from "../storage";
 
 export default function Signup({ navigation }) {
-  const [value, onChangeText] = React.useState("123456");
-
-  useEffect(() => {
-    const checkPhoneNumber = async () => {
-      // await deletePhoneNumber()
-      const phone_number = await getPhoneNumber();
-      setPhoneNumber(phone_number);
-    };
-    checkPhoneNumber();
-  }, []);
+  const [value, onChangeText] = useState("123456");
 
   const submit = async () => {
     await savePhoneNumber(value);
