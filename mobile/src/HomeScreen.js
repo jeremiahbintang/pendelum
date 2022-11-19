@@ -7,7 +7,7 @@ import { Input, Text } from "@rneui/themed";
 import { getPublishStatus } from "../storage";
 
 export default function HomeScreen({ navigation }) {
-  const [homeAddress, setHomeAddress] = useState("Type you home address here");
+  const [homeAddress, setHomeAddress] = useState("");
   const [isPublished, setIsPublished] = useState(false);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Text h2>Welcome to home!</Text>
-      <Input value={homeAddress} onChange={setHomeAddress} />
+      <Input placeholder={"Type you home address here"} value={homeAddress} onChange={setHomeAddress} />
       {isPublished ? <ActivityCards /> : <ActivityForm />}
       <StatusBar style="auto" />
     </View>
@@ -32,6 +32,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
   },
 });

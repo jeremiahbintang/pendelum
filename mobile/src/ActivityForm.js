@@ -8,6 +8,7 @@ import {
   updateTodayActivity,
 } from "../storage";
 import { Input, Button, Text, ListItem, Icon } from "@rneui/themed";
+import { generateSchedule } from "../api";
 
 export default function ActivityCards({ navigation }) {
   const [expanded, setExpanded] = useState({ 0: false });
@@ -125,8 +126,8 @@ export default function ActivityCards({ navigation }) {
                     />
                   )}
                   <Input
-                       keyboardType='numeric'
-                       placeholder="Input duration (minutes)"
+                    keyboardType="numeric"
+                    placeholder="Input duration (minutes)"
                     onChangeText={handleChange(`${key}.duration`)}
                     value={value.duration}
                   />
@@ -151,7 +152,6 @@ export default function ActivityCards({ navigation }) {
             type="solid"
             onPress={() => {
               const newKey = Object.keys(values).length;
-              console.log(newKey);
               setValues({
                 ...values,
                 [newKey]: {
@@ -166,6 +166,17 @@ export default function ActivityCards({ navigation }) {
             }}
           >
             <Icon name="add" color="white" />
+          </Button>
+          <Button
+            type="solid"
+            onPress={async () => {
+              const generatedSchedule = await generateSchedule({
+                data: Object.values(values),
+              });
+              console.log(generatedSchedule);
+            }}
+          >
+            Schedule it for me!
           </Button>
         </View>
       )}
