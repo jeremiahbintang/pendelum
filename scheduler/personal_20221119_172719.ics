@@ -1,0 +1,705 @@
+BEGIN:VCALENDAR
+METHOD:PUBLISH
+VERSION:2.0
+CALSCALE:GREGORIAN
+X-WR-TIMEZONE:Europe/Vienna
+X-PUBLISHED-TTL:PT1H0M
+PRODID:-//Technische Universität München//DE
+X-WR-CALNAME:Crespo Darriba\, Pablo
+X-WR-CALDESC:Crespo Darriba\, Pablo @ Technische Universität München
+BEGIN:VEVENT
+UID:889492486@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 2363
+SUMMARY:Künstliche Intelligenz in der Medizin I (IN2403) VO\, Standardg
+ ruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nRückert Danie
+ l\,\nSchnabel Julia\; 
+DTSTART:20221212T150000Z
+DTEND:20221212T170000Z
+GEO:48.265467;11.6623039
+LOCATION:00.5901.051\, Hörsaal (5901.EG.051)
+X-CO-RECURRINGID:530851
+END:VEVENT
+BEGIN:VEVENT
+UID:889492487@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 2363
+SUMMARY:Künstliche Intelligenz in der Medizin I (IN2403) VO\, Standardg
+ ruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nRückert Danie
+ l\,\nSchnabel Julia\; 
+DTSTART:20221219T150000Z
+DTEND:20221219T170000Z
+GEO:48.265467;11.6623039
+LOCATION:00.5901.051\, Hörsaal (5901.EG.051)
+X-CO-RECURRINGID:530851
+END:VEVENT
+BEGIN:VEVENT
+UID:889492500@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 2363
+SUMMARY:Künstliche Intelligenz in der Medizin I (IN2403) VO\, Standardg
+ ruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nRückert Danie
+ l\,\nSchnabel Julia\; 
+DTSTART:20221215T150000Z
+DTEND:20221215T170000Z
+GEO:48.265467;11.6623039
+LOCATION:00.5901.051\, Hörsaal (5901.EG.051)
+X-CO-RECURRINGID:530852
+END:VEVENT
+BEGIN:VEVENT
+UID:889563958@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 1822
+SUMMARY:Quantentechnologie VO\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nReiserer Andr
+ eas\; 
+DTSTART:20221207T090000Z
+DTEND:20221207T110000Z
+GEO:48.26817489874516;11.674661635479428
+LOCATION:PH II 127\, Seminarraum E11 (5107.U1.127)
+X-CO-RECURRINGID:533383
+END:VEVENT
+BEGIN:VEVENT
+UID:889701569@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0948
+SUMMARY:Pathophysiology VO\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; Ort: ME HS D\nVortragende: \nE
+ nterrottacher Andreas\,\nStriebeck Petra\; 
+DTSTART:20221216T100000Z
+DTEND:20221216T120000Z
+LOCATION:Externer Ort (siehe Anmerkung)
+X-CO-RECURRINGID:539392
+END:VEVENT
+BEGIN:VEVENT
+UID:889489716@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95065
+ 8536
+SUMMARY:Concepts of C++ programming (IN2377) VI\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nJelten Jonas\,
+ \nWollek Alessandro\,\nLasser Tobias\,\nFrank David\; 
+DTSTART:20221213T130000Z
+DTEND:20221213T150000Z
+LOCATION:003\, Hörsaal 2\, "Interims II" (5416.01.003)
+X-CO-RECURRINGID:530760
+END:VEVENT
+BEGIN:VEVENT
+UID:889492485@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 2363
+SUMMARY:Künstliche Intelligenz in der Medizin I (IN2403) VO\, Standardg
+ ruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nRückert Danie
+ l\,\nSchnabel Julia\; 
+DTSTART:20221205T150000Z
+DTEND:20221205T170000Z
+GEO:48.265467;11.6623039
+LOCATION:00.5901.051\, Hörsaal (5901.EG.051)
+X-CO-RECURRINGID:530851
+END:VEVENT
+BEGIN:VEVENT
+UID:889701602@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0798
+SUMMARY:Medical Information Processing VO\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; Ort: ME HS D\nVortragende: \nS
+ pengler Helmut\,\nEicher Johanna\,\nBild Raffael\,\nBoeker Martin\,\nE
+ nterrottacher Andreas\,\nBlaser Rainer\; 
+DTSTART:20221125T080000Z
+DTEND:20221125T100000Z
+LOCATION:Externer Ort (siehe Anmerkung)
+X-CO-RECURRINGID:539394
+END:VEVENT
+BEGIN:VEVENT
+UID:889563975@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 4706
+SUMMARY:Übung zu Quantentechnologie UE\, Gruppe 1 Johannes Früh
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nFrüh Johannes
+ \; 
+DTSTART:20221130T080000Z
+DTEND:20221130T090000Z
+GEO:48.26817489874516;11.674661635479428
+LOCATION:PH II 127\, Seminarraum E11 (5107.U1.127)
+X-CO-RECURRINGID:533384
+END:VEVENT
+BEGIN:VEVENT
+UID:889563976@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 4706
+SUMMARY:Übung zu Quantentechnologie UE\, Gruppe 1 Johannes Früh
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nFrüh Johannes
+ \; 
+DTSTART:20221207T080000Z
+DTEND:20221207T090000Z
+GEO:48.26817489874516;11.674661635479428
+LOCATION:PH II 127\, Seminarraum E11 (5107.U1.127)
+X-CO-RECURRINGID:533384
+END:VEVENT
+BEGIN:VEVENT
+UID:889563957@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 1822
+SUMMARY:Quantentechnologie VO\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nReiserer Andr
+ eas\; 
+DTSTART:20221130T090000Z
+DTEND:20221130T110000Z
+GEO:48.26817489874516;11.674661635479428
+LOCATION:PH II 127\, Seminarraum E11 (5107.U1.127)
+X-CO-RECURRINGID:533383
+END:VEVENT
+BEGIN:VEVENT
+UID:889762928@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0885
+SUMMARY:Image Guided Surgery (IN2286) VI\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; Preliminary Presentations	\; Zoom
+  link: https://tum-conf.zoom.us/j/69260165143 Meeting ID: 692 6016 514
+ 3 Passcode: IGSWS22\nVortragende: \nSaleh Mahdi\,\nMach Kristina\,\n
+ Maier Heiko\,\nSommersperger Michael\,\nWendler Vidal Thomas\,\nRamada
+ ni Ardit\,\nVelikova Yordanka\,\nBi Yuan\; 
+DTSTART:20221207T130000Z
+DTEND:20221207T150000Z
+GEO:48.2622985;11.6697764
+LOCATION:03.13.010\, Seminarraum (5613.03.010)
+X-CO-RECURRINGID:
+END:VEVENT
+BEGIN:VEVENT
+UID:889489713@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95065
+ 8536
+SUMMARY:Concepts of C++ programming (IN2377) VI\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nJelten Jonas\,
+ \nWollek Alessandro\,\nLasser Tobias\,\nFrank David\; 
+DTSTART:20221122T130000Z
+DTEND:20221122T150000Z
+LOCATION:003\, Hörsaal 2\, "Interims II" (5416.01.003)
+X-CO-RECURRINGID:530760
+END:VEVENT
+BEGIN:VEVENT
+UID:889563974@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 4706
+SUMMARY:Übung zu Quantentechnologie UE\, Gruppe 1 Johannes Früh
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nFrüh Johannes
+ \; 
+DTSTART:20221123T080000Z
+DTEND:20221123T090000Z
+GEO:48.26817489874516;11.674661635479428
+LOCATION:PH II 127\, Seminarraum E11 (5107.U1.127)
+X-CO-RECURRINGID:533384
+END:VEVENT
+BEGIN:VEVENT
+UID:889899483@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0885
+SUMMARY:Image Guided Surgery (IN2286) VI\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; Tracking and Navigation\; Zoom li
+ nk: https://tum-conf.zoom.us/j/69260165143 Meeting ID: 692 6016 5143 P
+ asscode: IGSWS22\nVortragende: \nMaier Heiko\,\nRamadani Ardit\; 
+DTSTART:20221130T130000Z
+DTEND:20221130T150000Z
+GEO:48.2622985;11.6697764
+LOCATION:03.13.010\, Seminarraum (5613.03.010)
+X-CO-RECURRINGID:
+END:VEVENT
+BEGIN:VEVENT
+UID:889649213@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0635
+SUMMARY:Deutsch als Fremdsprache A2.1 SE\, Keza GERMAN MATTERS (GAR Prä
+ senz)
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nKeza Inese\; 
+DTSTART:20221130T170000Z
+DTEND:20221130T183000Z
+GEO:48.2622985;11.6697764
+LOCATION:00.08.038\, Seminarraum (5608.EG.038)
+X-CO-RECURRINGID:535571
+END:VEVENT
+BEGIN:VEVENT
+UID:889500033@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95065
+ 8536
+SUMMARY:Concepts of C++ programming (IN2377) VI\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nJelten Jonas\,
+ \nWollek Alessandro\,\nLasser Tobias\,\nFrank David\; 
+DTSTART:20221208T160000Z
+DTEND:20221208T180000Z
+GEO:48.26736;11.67312
+LOCATION:Hörsaal im Galileo nur Mo-Do 7-19 Uhr (8120.EG.001)
+X-CO-RECURRINGID:531191
+END:VEVENT
+BEGIN:VEVENT
+UID:889563956@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 1822
+SUMMARY:Quantentechnologie VO\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nReiserer Andr
+ eas\; 
+DTSTART:20221123T090000Z
+DTEND:20221123T110000Z
+GEO:48.26817489874516;11.674661635479428
+LOCATION:PH II 127\, Seminarraum E11 (5107.U1.127)
+X-CO-RECURRINGID:533383
+END:VEVENT
+BEGIN:VEVENT
+UID:889649211@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0635
+SUMMARY:Deutsch als Fremdsprache A2.1 SE\, Keza GERMAN MATTERS (GAR Prä
+ senz)
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nKeza Inese\; 
+DTSTART:20221207T170000Z
+DTEND:20221207T183000Z
+GEO:48.2622985;11.6697764
+LOCATION:00.08.038\, Seminarraum (5608.EG.038)
+X-CO-RECURRINGID:535571
+END:VEVENT
+BEGIN:VEVENT
+UID:889489714@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95065
+ 8536
+SUMMARY:Concepts of C++ programming (IN2377) VI\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nJelten Jonas\,
+ \nWollek Alessandro\,\nLasser Tobias\,\nFrank David\; 
+DTSTART:20221129T130000Z
+DTEND:20221129T150000Z
+LOCATION:003\, Hörsaal 2\, "Interims II" (5416.01.003)
+X-CO-RECURRINGID:530760
+END:VEVENT
+BEGIN:VEVENT
+UID:889492498@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 2363
+SUMMARY:Künstliche Intelligenz in der Medizin I (IN2403) VO\, Standardg
+ ruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nRückert Danie
+ l\,\nSchnabel Julia\; 
+DTSTART:20221124T150000Z
+DTEND:20221124T170000Z
+GEO:48.265467;11.6623039
+LOCATION:00.5901.051\, Hörsaal (5901.EG.051)
+X-CO-RECURRINGID:530852
+END:VEVENT
+BEGIN:VEVENT
+UID:889492499@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 2363
+SUMMARY:Künstliche Intelligenz in der Medizin I (IN2403) VO\, Standardg
+ ruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nRückert Danie
+ l\,\nSchnabel Julia\; 
+DTSTART:20221208T150000Z
+DTEND:20221208T170000Z
+GEO:48.265467;11.6623039
+LOCATION:00.5901.051\, Hörsaal (5901.EG.051)
+X-CO-RECURRINGID:530852
+END:VEVENT
+BEGIN:VEVENT
+UID:889649214@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0635
+SUMMARY:Deutsch als Fremdsprache A2.1 SE\, Keza GERMAN MATTERS (GAR Prä
+ senz)
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nKeza Inese\; 
+DTSTART:20221128T170000Z
+DTEND:20221128T183000Z
+GEO:48.2622985;11.6697764
+LOCATION:00.08.038\, Seminarraum (5608.EG.038)
+X-CO-RECURRINGID:535571
+END:VEVENT
+BEGIN:VEVENT
+UID:889649215@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0635
+SUMMARY:Deutsch als Fremdsprache A2.1 SE\, Keza GERMAN MATTERS (GAR Prä
+ senz)
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nKeza Inese\; 
+DTSTART:20221123T170000Z
+DTEND:20221123T183000Z
+GEO:48.2622985;11.6697764
+LOCATION:00.08.038\, Seminarraum (5608.EG.038)
+X-CO-RECURRINGID:535571
+END:VEVENT
+BEGIN:VEVENT
+UID:889489715@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95065
+ 8536
+SUMMARY:Concepts of C++ programming (IN2377) VI\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nJelten Jonas\,
+ \nWollek Alessandro\,\nLasser Tobias\,\nFrank David\; 
+DTSTART:20221206T130000Z
+DTEND:20221206T150000Z
+LOCATION:003\, Hörsaal 2\, "Interims II" (5416.01.003)
+X-CO-RECURRINGID:530760
+END:VEVENT
+BEGIN:VEVENT
+UID:889492484@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 2363
+SUMMARY:Künstliche Intelligenz in der Medizin I (IN2403) VO\, Standardg
+ ruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nRückert Danie
+ l\,\nSchnabel Julia\; 
+DTSTART:20221128T150000Z
+DTEND:20221128T170000Z
+GEO:48.265467;11.6623039
+LOCATION:00.5901.051\, Hörsaal (5901.EG.051)
+X-CO-RECURRINGID:530851
+END:VEVENT
+BEGIN:VEVENT
+UID:889701604@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0798
+SUMMARY:Medical Information Processing VO\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; Ort: ME HS D\nVortragende: \nS
+ pengler Helmut\,\nEicher Johanna\,\nBild Raffael\,\nBoeker Martin\,\nE
+ nterrottacher Andreas\,\nBlaser Rainer\; 
+DTSTART:20221209T080000Z
+DTEND:20221209T100000Z
+LOCATION:Externer Ort (siehe Anmerkung)
+X-CO-RECURRINGID:539394
+END:VEVENT
+BEGIN:VEVENT
+UID:889563959@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 1822
+SUMMARY:Quantentechnologie VO\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nReiserer Andr
+ eas\; 
+DTSTART:20221214T090000Z
+DTEND:20221214T110000Z
+GEO:48.26817489874516;11.674661635479428
+LOCATION:PH II 127\, Seminarraum E11 (5107.U1.127)
+X-CO-RECURRINGID:533383
+END:VEVENT
+BEGIN:VEVENT
+UID:889701566@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0948
+SUMMARY:Pathophysiology VO\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; Ort: ME HS D\nVortragende: \nE
+ nterrottacher Andreas\,\nStriebeck Petra\; 
+DTSTART:20221125T100000Z
+DTEND:20221125T120000Z
+LOCATION:Externer Ort (siehe Anmerkung)
+X-CO-RECURRINGID:539392
+END:VEVENT
+BEGIN:VEVENT
+UID:889701567@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0948
+SUMMARY:Pathophysiology VO\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; Ort: ME HS D\nVortragende: \nE
+ nterrottacher Andreas\,\nStriebeck Petra\; 
+DTSTART:20221202T100000Z
+DTEND:20221202T120000Z
+LOCATION:Externer Ort (siehe Anmerkung)
+X-CO-RECURRINGID:539392
+END:VEVENT
+BEGIN:VEVENT
+UID:889701568@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0948
+SUMMARY:Pathophysiology VO\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; Ort: ME HS D\nVortragende: \nE
+ nterrottacher Andreas\,\nStriebeck Petra\; 
+DTSTART:20221209T100000Z
+DTEND:20221209T120000Z
+LOCATION:Externer Ort (siehe Anmerkung)
+X-CO-RECURRINGID:539392
+END:VEVENT
+BEGIN:VEVENT
+UID:889762926@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0885
+SUMMARY:Image Guided Surgery (IN2286) VI\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; Robotics\; Zoom link: https://tum
+ -conf.zoom.us/j/69260165143 Meeting ID: 692 6016 5143 Passcode: IGSWS2
+ 2\nVortragende: \nBi Yuan\; 
+DTSTART:20221123T130000Z
+DTEND:20221123T150000Z
+GEO:48.2622985;11.6697764
+LOCATION:03.13.010\, Seminarraum (5613.03.010)
+X-CO-RECURRINGID:
+END:VEVENT
+BEGIN:VEVENT
+UID:889649208@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0635
+SUMMARY:Deutsch als Fremdsprache A2.1 SE\, Keza GERMAN MATTERS (GAR Prä
+ senz)
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nKeza Inese\; 
+DTSTART:20221219T170000Z
+DTEND:20221219T183000Z
+GEO:48.2622985;11.6697764
+LOCATION:00.08.038\, Seminarraum (5608.EG.038)
+X-CO-RECURRINGID:535571
+END:VEVENT
+BEGIN:VEVENT
+UID:889649212@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0635
+SUMMARY:Deutsch als Fremdsprache A2.1 SE\, Keza GERMAN MATTERS (GAR Prä
+ senz)
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nKeza Inese\; 
+DTSTART:20221205T170000Z
+DTEND:20221205T183000Z
+GEO:48.2622985;11.6697764
+LOCATION:00.08.038\, Seminarraum (5608.EG.038)
+X-CO-RECURRINGID:535571
+END:VEVENT
+BEGIN:VEVENT
+UID:889649216@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0635
+SUMMARY:Deutsch als Fremdsprache A2.1 SE\, Keza GERMAN MATTERS (GAR Prä
+ senz)
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nKeza Inese\; 
+DTSTART:20221121T170000Z
+DTEND:20221121T183000Z
+GEO:48.2622985;11.6697764
+LOCATION:00.08.038\, Seminarraum (5608.EG.038)
+X-CO-RECURRINGID:535571
+END:VEVENT
+BEGIN:VEVENT
+UID:889500032@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95065
+ 8536
+SUMMARY:Concepts of C++ programming (IN2377) VI\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nJelten Jonas\,
+ \nWollek Alessandro\,\nLasser Tobias\,\nFrank David\; 
+DTSTART:20221124T160000Z
+DTEND:20221124T180000Z
+GEO:48.26736;11.67312
+LOCATION:Hörsaal im Galileo nur Mo-Do 7-19 Uhr (8120.EG.001)
+X-CO-RECURRINGID:531191
+END:VEVENT
+BEGIN:VEVENT
+UID:889492483@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 2363
+SUMMARY:Künstliche Intelligenz in der Medizin I (IN2403) VO\, Standardg
+ ruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nRückert Danie
+ l\,\nSchnabel Julia\; 
+DTSTART:20221121T150000Z
+DTEND:20221121T170000Z
+GEO:48.265467;11.6623039
+LOCATION:00.5901.051\, Hörsaal (5901.EG.051)
+X-CO-RECURRINGID:530851
+END:VEVENT
+BEGIN:VEVENT
+UID:889762958@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0885
+SUMMARY:Image Guided Surgery (IN2286) VI\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; Introduction to the German healt
+ h system and regulatory aspects\; Zoom link: https://tum-conf.zoom.us/j
+ /69260165143 Meeting ID: 692 6016 5143 Passcode: IGSWS22\nVortragende
+ : \nWendler Vidal Thomas\,\nRamadani Ardit\; 
+DTSTART:20221214T130000Z
+DTEND:20221214T150000Z
+GEO:48.2622985;11.6697764
+LOCATION:03.13.010\, Seminarraum (5613.03.010)
+X-CO-RECURRINGID:
+END:VEVENT
+BEGIN:VEVENT
+UID:889649209@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0635
+SUMMARY:Deutsch als Fremdsprache A2.1 SE\, Keza GERMAN MATTERS (GAR Prä
+ senz)
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nKeza Inese\; 
+DTSTART:20221214T170000Z
+DTEND:20221214T183000Z
+GEO:48.2622985;11.6697764
+LOCATION:00.08.038\, Seminarraum (5608.EG.038)
+X-CO-RECURRINGID:535571
+END:VEVENT
+BEGIN:VEVENT
+UID:889500034@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95065
+ 8536
+SUMMARY:Concepts of C++ programming (IN2377) VI\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nJelten Jonas\,
+ \nWollek Alessandro\,\nLasser Tobias\,\nFrank David\; 
+DTSTART:20221215T160000Z
+DTEND:20221215T180000Z
+GEO:48.26736;11.67312
+LOCATION:Hörsaal im Galileo nur Mo-Do 7-19 Uhr (8120.EG.001)
+X-CO-RECURRINGID:531191
+END:VEVENT
+BEGIN:VEVENT
+UID:889701605@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0798
+SUMMARY:Medical Information Processing VO\, Standardgruppe
+DESCRIPTION:confirmed\; regular class\; Ort: ME HS D\nVortragende: \nS
+ pengler Helmut\,\nEicher Johanna\,\nBild Raffael\,\nBoeker Martin\,\nE
+ nterrottacher Andreas\,\nBlaser Rainer\; 
+DTSTART:20221216T080000Z
+DTEND:20221216T100000Z
+LOCATION:Externer Ort (siehe Anmerkung)
+X-CO-RECURRINGID:539394
+END:VEVENT
+BEGIN:VEVENT
+UID:889563977@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 4706
+SUMMARY:Übung zu Quantentechnologie UE\, Gruppe 1 Johannes Früh
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nFrüh Johannes
+ \; 
+DTSTART:20221214T080000Z
+DTEND:20221214T090000Z
+GEO:48.26817489874516;11.674661635479428
+LOCATION:PH II 127\, Seminarraum E11 (5107.U1.127)
+X-CO-RECURRINGID:533384
+END:VEVENT
+BEGIN:VEVENT
+UID:889649210@tum.de
+DTSTAMP:20221119T162719Z
+STATUS:CONFIRMED
+CLASS:PUBLIC
+URL:https://campus.tum.de/tumonline/wbLv.wbShowLVDetail?pStpSpNr=95063
+ 0635
+SUMMARY:Deutsch als Fremdsprache A2.1 SE\, Keza GERMAN MATTERS (GAR Prä
+ senz)
+DESCRIPTION:confirmed\; regular class\; \nVortragende: \nKeza Inese\; 
+DTSTART:20221212T170000Z
+DTEND:20221212T183000Z
+GEO:48.2622985;11.6697764
+LOCATION:00.08.038\, Seminarraum (5608.EG.038)
+X-CO-RECURRINGID:535571
+END:VEVENT
+END:VCALENDAR
