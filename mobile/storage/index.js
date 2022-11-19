@@ -51,6 +51,7 @@ const saveGoogleAuthorisation = async (response) => {
 const getGoogleAuthorisation = async () => {
   try {
     const auth = await getData("google_authorisation");
+    console.log(auth)
     return JSON.parse(auth)
   } catch (e) {
     // saving error
