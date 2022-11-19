@@ -1,26 +1,18 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { StatusBar } from "expo-status-bar";
-import { NavigationContainer } from "@react-navigation/native";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 
 export default function HomeScreen({ navigation }) {
-  const [value, onChangeText] = React.useState("Useless Multiline Placeholder");
+  const [homeAddress, setHomeAddress] = useState()
+
   return (
     <View style={styles.container}>
       <Text>Welcome to home!</Text>
       <TextInput
-        onChangeText={(text) => onChangeText(text)}
-        value={value}
-        editable
-        maxLength={40}
-      />
-      <Button
-        onPress={() => navigation.navigate('Signup')}
-        title="Go to Signup"
-        color="#841584"
-        accessibilityLabel="Learn more about this purple button"
-      />
+        value={homeAddress}
+        onChange={setHomeAddress}
 
+      />
       <StatusBar style="auto" />
     </View>
   );
