@@ -40,7 +40,7 @@ export default function ActivityCards({ navigation }) {
     <Formik initialValues={activities} enableReinitialize>
       {({ handleChange, setValues, setFieldValue, values }) => (
         <View>
-          <Text h4>Add your schedule for today!</Text>
+          <Text h4>Add your activity for today!</Text>
           {Object.entries(values).map(([key, value]) => (
             <ListItem.Accordion
               key={key}
@@ -62,7 +62,7 @@ export default function ActivityCards({ navigation }) {
                     onChangeText={handleChange(`${key}.location`)}
                     value={value.location}
                   />
-                  <View style={styles.timePicker}>
+                  <View style={styles.row}>
                     <Input
                       placeholder="Input start time"
                       editable={false}
@@ -94,7 +94,7 @@ export default function ActivityCards({ navigation }) {
                       }}
                     />
                   )}
-                  <View style={styles.timePicker}>
+                  <View style={styles.row}>
                     <Input
                       placeholder="Input end time"
                       editable={false}
@@ -148,36 +148,53 @@ export default function ActivityCards({ navigation }) {
               </ListItem>
             </ListItem.Accordion>
           ))}
-          <Button
-            type="solid"
-            onPress={() => {
-              const newKey = Object.keys(values).length;
-              setValues({
-                ...values,
-                [newKey]: {
-                  start_time: new Date(),
-                  end_time: new Date(),
-                  duration: "",
-                  name: "",
-                  location: "",
-                },
-              });
-              setExpanded({ ...expanded, [newKey - 1]: false, [newKey]: true });
-            }}
-          >
-            <Icon name="add" color="white" />
-          </Button>
-          <Button
-            type="solid"
-            onPress={async () => {
-              const generatedSchedule = await generateSchedule({
-                data: Object.values(values),
-              });
-              console.log(generatedSchedule);
-            }}
-          >
-            Schedule it for me!
-          </Button>
+          <View style={styles.row}>
+            <Button
+              type="solid"
+              onPress={() => {
+                const newKey = Object.keys(values).length;
+                setValues({
+                  ...values,
+                  [newKey]: {
+                    start_time: new Date(),
+                    end_time: new Date(),
+                    duration: "",
+                    name: "",
+                    location: "",
+                  },
+                });
+                setExpanded({
+                  ...expanded,
+                  [newKey - 1]: false,
+                  [newKey]: true,
+                });
+              }}
+            >
+              <Icon name="add" color="white" />
+            </Button>
+            <Button
+              containerStyle={{
+                marginLeft: 5,
+              }}
+              type="solid"
+              onPress={async () => {
+                const generatedSchedule = await generateSchedule({
+                  data: Object.values(values),
+                });
+                console.log(generatedSchedule);
+              }}
+            >
+              Schedule it for me!
+            </Button>
+            <Button
+              containerStyle={{
+                marginLeft: 5,
+              }}
+              type="solid"
+            >
+              Publish!
+            </Button>
+          </View>
         </View>
       )}
     </Formik>
@@ -192,7 +209,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  timePicker: {
+  row: {
     flexDirection: "row",
     // width:"100%",
     // alignItems: "center",
