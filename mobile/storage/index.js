@@ -37,6 +37,58 @@ const savePhoneNumber = async (phone_number) => {
   }
 };
 
+
+const saveGoogleAuthorisation = async (response) => {
+  try {
+    await storeData("google_authorisation", JSON.stringify(response));
+  } catch (e) {
+    // saving error
+    console.error(e);
+  }
+};
+
+
+const getGoogleAuthorisation = async () => {
+  try {
+    const auth = await getData("google_authorisation");
+    return JSON.parse(auth)
+  } catch (e) {
+    // saving error
+    console.error(e);
+  }
+};
+
+const getCalendarList = async () => {
+  try {
+    const list = await getData("calendar_list");
+    console.info("Getting calendar list... ")
+    return JSON.parse(list)
+  } catch (e) {
+    // saving error
+    console.error(e);
+  }
+};
+
+const saveCalendarList = async (list) => {
+  try {
+    console.info("Saving calendar list... ", list)
+    await storeData("calendar_list", JSON.stringify(list));
+  } catch (e) {
+    // saving error
+    console.error(e);
+  }
+};
+
+const saveChosenCalendar = async (calendar) => {
+  try {
+    await storeData("chosen_calendar", JSON.stringify(calendar));
+  } catch (e) {
+    // saving error
+    console.error(e);
+  }
+};
+
+
 const getPhoneNumber = async () => {
   try {
     const phone_number = await getData("phone_number");
@@ -131,7 +183,6 @@ const getTodayActivities = async () => {
   try {
     // await AsyncStorage.clear();
     const activities = await getData("today_activities");
-    console.log(activities)
     return JSON.parse(activities);
   } catch (e) {
     // saving error
@@ -177,6 +228,10 @@ const deleteTodayActivity = async (_id) => {
 };
 
 export {
+  getGoogleAuthorisation,
+  saveGoogleAuthorisation,
+  saveCalendarList,
+  getCalendarList,
   savePhoneNumber,
   getPhoneNumber,
   deletePhoneNumber,
@@ -186,5 +241,6 @@ export {
   deleteTodayActivity,
   publishTodayActivities,
   editTodayActivities,
-  getPublishStatus
+  getPublishStatus,
+  saveChosenCalendar
 };

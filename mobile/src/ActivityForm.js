@@ -3,12 +3,17 @@ import { Formik } from "formik";
 import { StyleSheet, View } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
+  getCalendarList,
   getTodayActivities,
+  saveCalendarList,
   saveTodayActivity,
   updateTodayActivity,
+  saveChosenCalendar,
 } from "../storage";
 import { Input, Button, Text, ListItem, Icon } from "@rneui/themed";
 import { generateSchedule } from "../api";
+import { listCalendarsFromGoogle } from "../google-calendar";
+import { Badge } from "@rneui/base";
 
 export default function ActivityCards({ navigation }) {
   const [expanded, setExpanded] = useState({ 0: false });
@@ -28,6 +33,17 @@ export default function ActivityCards({ navigation }) {
       location: "",
     },
   });
+  const [calendars, setCalendars] = useState([]);
+  const [isPublishClicked, setIsPublishedClicked] = useState(false);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const calendars = await getCalendarList();
+      setCalendars(calendars || []);
+    };
+    fetch();
+  }, []);
+
   useEffect(() => {
     const fetch = async () => {
       const activities = await getTodayActivities();
@@ -191,9 +207,35 @@ export default function ActivityCards({ navigation }) {
                 marginLeft: 5,
               }}
               type="solid"
+              onPress={async () => {
+                const calendars = await listCalendarsFromGoogle();
+                await saveCalendarList(calendars);
+                setCalendars(calendars);
+                setIsPublishedClicked(true)
+              }}
             >
               Publish!
             </Button>
+          </View>
+          <View style={styles.calendars}>
+            {isPublishClicked && calendars.length > 0 && (
+              <Text>Choose which calendar to update</Text>
+            )}
+            {isPublishClicked &&
+              calendars.map((cal) => (
+                <View key={cal.id} style={styles.row}>
+                  <Button
+                    containerStyle={{
+                      marginBottom: 10,
+                    }}
+                    type="solid"
+                    onPress={async () => await saveChosenCalendar(cal)}
+                  >
+                    {cal.summary}
+                    {cal.primary && <Badge value="primary" status="primary" />}
+                  </Button>
+                </View>
+              ))}
           </View>
         </View>
       )}
@@ -208,6 +250,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  calendars: {
+    flex: 1,
+    width: "100%",
+    marginTop: 10,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
   row: {
     flexDirection: "row",
