@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 import math
 from icalendar import Calendar, Event, vCalAddress, vText
+from scheduler.generate_route import generate_route
 from pathlib import Path
 import os
 import pytz
@@ -108,7 +109,8 @@ def make_activity_objects(activities):
     processed_activities = []
     for act in activities:
         name = None
-        if act["name"] != None:
+        print(act.get("name"))
+        if act.get("name") != None:
             name = act["name"]
         location = None
         if act["location"] != None:
@@ -120,7 +122,7 @@ def make_activity_objects(activities):
         if act["end_time"] != None:
             end_time = datetime.strptime(act["end_time"], "%Y-%m-%d %H:%M:%S")
         duration = None
-        if act["duration"] != None:
+        if act["duration"] != None and act["duration"] != '':
             duration = timedelta(minutes=act["duration"])
         processed_act = Activity(name=name, start_time=start_time, end_time=end_time, duration=duration, location=location)
         processed_activities.append(processed_act)
