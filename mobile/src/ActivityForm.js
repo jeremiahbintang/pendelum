@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Formik } from "formik";
-import { StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
+import * as Location from "expo-location";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
   getCalendarList,
@@ -12,11 +14,22 @@ import {
 } from "../storage";
 import { Input, Button, Text, ListItem, Icon } from "@rneui/themed";
 import { generateSchedule } from "../api";
-import { listCalendarsFromGoogle } from "../google-calendar";
+import {
+  insertEventToGoogleCalendar,
+  listCalendarsFromGoogle,
+} from "../google-calendar";
 import { Badge } from "@rneui/base";
 
 export default function ActivityCards({ navigation }) {
-  const [expanded, setExpanded] = useState({ 0: false });
+  const mapRef = useRef();
+  const [location, setLocation] = useState({
+    latitude: 48.2627156,
+    longitude: 11.6683011,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [expanded, setExpanded] = useState({ 0: true });
   const [showStartTimeDatePicker, setShowStartTimeDatePicker] = useState({
     0: false,
   });
@@ -35,6 +48,21 @@ export default function ActivityCards({ navigation }) {
   });
   const [calendars, setCalendars] = useState([]);
   const [isPublishClicked, setIsPublishedClicked] = useState(false);
+  const [mapMarker, setMapMarker] = useState(null);
+
+  const publishEventsToGoogleCalendat = (calendarId) => {
+    const google_event_objects = activities.map((activity) => {
+      return {
+        start: { dateTime: activity.start_time },
+        end: { dateTime: activity.end_time },
+        endTimeUnspecified: !!activity.end_time,
+        summary: activity.name,
+        location: activity.location,
+      };
+    });
+
+    insertEventToGoogleCalendar;
+  };
 
   useEffect(() => {
     const fetch = async () => {
@@ -52,6 +80,25 @@ export default function ActivityCards({ navigation }) {
     };
     fetch();
   }, [runFetch]);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation({
+        ...location,
+        latitude: currentLocation.coords.latitude,
+        longitude: currentLocation.coords.longitude,
+      });
+    })();
+  }, []);
+
+  useEffect(() => {console.log(mapMarker)}, [mapMarker])
   return (
     <Formik initialValues={activities} enableReinitialize>
       {({ handleChange, setValues, setFieldValue, values }) => (
@@ -76,8 +123,58 @@ export default function ActivityCards({ navigation }) {
                   <Input
                     placeholder="Input location"
                     onChangeText={handleChange(`${key}.location`)}
-                    value={value.location}
+                    value={value.location?.name}
+                    editable={false}
                   />
+                  <MapView
+                    ref={mapRef}                    
+                    style={styles.map}
+                    showsUserLocation
+                    followsUserLocation
+                    onPoiClick={({
+                      nativeEvent: {
+                        coordinate: { latitude, longitude },
+                        name,
+                        placeId
+                      },
+                    }) =>{
+                      setMapMarker({
+                        latitude,
+                        longitude,
+                        latitudeDelta: 0.01,
+                        longitudeDelta: 0.01,
+                      })
+                      setFieldValue(`${key}.location`, {
+                        name, latitude, longitude, placeId
+                      })}
+                    }
+                    onMarkerPress={(e) => {console.log(e)}}
+                    onPress={async ({
+                      nativeEvent: {
+                        coordinate: { latitude, longitude },
+                      },
+                    }) =>{
+                      setMapMarker({
+                        latitude,
+                        longitude,
+                        latitudeDelta: 0.01,
+                        longitudeDelta: 0.01,
+                      })
+                      const address = await mapRef.current?.addressForCoordinate({
+                        latitude,
+                        longitude
+                      })
+                      console.log(address)
+                      setFieldValue(`${key}.location`, {
+                        name: address.subThoroughfare ? address.thoroughfare + " " + address.subThoroughfare : address.thoroughfare, latitude, longitude
+                      })}
+
+                    
+                    }
+                    initialRegion={location}
+                  >
+                    {mapMarker && <Marker coordinate={mapMarker} />}
+                  </MapView>
                   <View style={styles.row}>
                     <Input
                       placeholder="Input start time"
@@ -211,7 +308,7 @@ export default function ActivityCards({ navigation }) {
                 const calendars = await listCalendarsFromGoogle();
                 await saveCalendarList(calendars);
                 setCalendars(calendars);
-                setIsPublishedClicked(true)
+                setIsPublishedClicked(true);
               }}
             >
               Publish!
@@ -229,7 +326,10 @@ export default function ActivityCards({ navigation }) {
                       marginBottom: 10,
                     }}
                     type="solid"
-                    onPress={async () => await saveChosenCalendar(cal)}
+                    onPress={async () => {
+                      await saveChosenCalendar(cal);
+                      publishEventsToGoogleCalendat(calendarId);
+                    }}
                   >
                     {cal.summary}
                     {cal.primary && <Badge value="primary" status="primary" />}
@@ -269,5 +369,9 @@ const styles = StyleSheet.create({
     width: "50px",
     height: "50px",
     fontSize: "10px",
+  },
+  map: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height / 3,
   },
 });
