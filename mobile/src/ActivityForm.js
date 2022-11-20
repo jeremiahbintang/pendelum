@@ -20,6 +20,20 @@ import {
   listCalendarsFromGoogle,
 } from "../google-calendar";
 import { Badge } from "@rneui/base";
+import { Platform } from 'react-native';
+if (Platform.OS === 'ios') {
+  const platform_os = 'ios'
+  // do something for ios
+} else if (Platform.OS === 'android') {
+  const platform_os = 'droid'
+  // other thing for android
+} else if (Platform.OS === 'web') {
+  const platform_os = 'web'
+} else {
+  // you probably won't end up here unless you support another platform!
+}
+
+
 
 export default function ActivityCards({ navigation }) {
   // const [date, setDate] = useState(new Date())
@@ -83,7 +97,7 @@ export default function ActivityCards({ navigation }) {
   useEffect(() => {
     const fetch = async () => {
       const activities = await getTodayActivities();
-      if (activities){
+      if (activities) {
         const formValues = { ...activities };
         setActivities(formValues);
       }
@@ -108,7 +122,7 @@ export default function ActivityCards({ navigation }) {
     })();
   }, []);
 
-  useEffect(() => {console.log(mapMarker)}, [mapMarker])
+  useEffect(() => { console.log(mapMarker) }, [mapMarker])
   return (
     <ScrollView
       style={styles.scrollView}
@@ -118,158 +132,160 @@ export default function ActivityCards({ navigation }) {
       <Formik initialValues={activities} enableReinitialize>
         {({ handleChange, setValues, setFieldValue, values }) => (
           <View>
-            
+
             <Text h4>
               Add your activity for today
             </Text>
             <View style={styles.row}>
-            <Button
-              type="solid"
-              buttonStyle={{
-                backgroundColor: 'black',
-                borderWidth: 2,
-                borderColor: 'black',
-                borderRadius: 30,
-                marginVertical: 5,
-              }}
-              onPress={() => {
-                const newKey = Object.keys(values).length;
-                setValues({
-                  ...values,
-                  [newKey]: {
-                    start_time: new Date(),
-                    end_time: new Date(),
-                    duration: "",
-                    name: "",
-                    location: "",
-                  },
-                });
-                setExpanded({
-                  ...expanded,
-                  [newKey - 1]: false,
-                  [newKey]: true,
-                });
-              }}
-            >
-              <Icon name="add" color="white" />
-            </Button>
-            <Button
-              containerStyle={{
-                marginLeft: 5,
-              }}
-              type="solid"
-              buttonStyle={{
-                backgroundColor: 'black',
-                borderWidth: 2,
-                borderColor: 'black',
-                borderRadius: 30,
-                marginVertical: 5,
-              }}
-              onPress={async () => {
-                const generatedSchedule = await generateSchedule({
-                  data: Object.values(values),
-                });
-                console.log(generatedSchedule);
-              }}
-            >
-              Schedule it for me!
-            </Button>
-            <Button
-              containerStyle={{
-                marginLeft: 5,
-              }}
-              type="solid"
-              buttonStyle={{
-                backgroundColor: 'black',
-                borderWidth: 2,
-                borderColor: 'black',
-                borderRadius: 30,
-                marginVertical: 5,
-              }}
-              onPress={async () => {
-                const calendars = await listCalendarsFromGoogle();
-                await saveCalendarList(calendars);
-                setCalendars(calendars);
-                setIsPublishedClicked(true);
-              }}
-            >
-              Publish!
-            </Button>
-          </View>
+              <Button
+                type="solid"
+                buttonStyle={{
+                  backgroundColor: 'black',
+                  borderWidth: 2,
+                  borderColor: 'black',
+                  borderRadius: 30,
+                  marginVertical: 5,
+                }}
+                onPress={() => {
+                  const newKey = Object.keys(values).length;
+                  setValues({
+                    ...values,
+                    [newKey]: {
+                      start_time: new Date(),
+                      end_time: new Date(),
+                      duration: "",
+                      name: "",
+                      location: "",
+                    },
+                  });
+                  setExpanded({
+                    ...expanded,
+                    [newKey - 1]: false,
+                    [newKey]: true,
+                  });
+                }}
+              >
+                <Icon name="add" color="white" />
+              </Button>
+              <Button
+                containerStyle={{
+                  marginLeft: 5,
+                }}
+                type="solid"
+                buttonStyle={{
+                  backgroundColor: 'black',
+                  borderWidth: 2,
+                  borderColor: 'black',
+                  borderRadius: 30,
+                  marginVertical: 5,
+                }}
+                onPress={async () => {
+                  const generatedSchedule = await generateSchedule({
+                    data: Object.values(values),
+                  });
+                  console.log(generatedSchedule);
+                }}
+              >
+                Schedule it for me!
+              </Button>
+              <Button
+                containerStyle={{
+                  marginLeft: 5,
+                }}
+                type="solid"
+                buttonStyle={{
+                  backgroundColor: 'black',
+                  borderWidth: 2,
+                  borderColor: 'black',
+                  borderRadius: 30,
+                  marginVertical: 5,
+                }}
+                onPress={async () => {
+                  const calendars = await listCalendarsFromGoogle();
+                  await saveCalendarList(calendars);
+                  setCalendars(calendars);
+                  setIsPublishedClicked(true);
+                }}
+              >
+                Publish!
+              </Button>
+            </View>
             {Object.entries(values).map(([key, value]) => (
-            <ListItem.Accordion
-              key={key}
-              content={<Text h3>{value.name || "Activity"}</Text>}
-              isExpanded={expanded[key]}
-              onPress={() => {
-                setExpanded({ ...expanded, [key]: !expanded[key] });
-              }}
-              borderWidth={1}
-              borderRadius={2}
-            >
-              <ListItem borderWidth={1} borderRadius={0}>
-                <ListItem.Content bottomDivider>
-                  <Input
-                    placeholder="Input name of activity"
-                    onChangeText={handleChange(`${key}.name`)}
-                    value={value.name}
-                  />
-                  <MapView
-                    ref={mapRef}                    
-                    style={styles.map}
-                    showsUserLocation
-                    followsUserLocation
-                    onPoiClick={({
-                      nativeEvent: {
-                        coordinate: { latitude, longitude },
-                        name,
-                        placeId
-                      },
-                    }) =>{
-                      setMapMarker({
-                        latitude,
-                        longitude,
-                        latitudeDelta: 0.01,
-                        longitudeDelta: 0.01,
-                      })
-                      setFieldValue(`${key}.location`, name)}
-                      // setFieldValue(`${key}.location`, {
-                      //   name, latitude, longitude, placeId
-                      // })}
-                    }
-                    onMarkerPress={(e) => {console.log(e)}}
-                    onPress={async ({
-                      nativeEvent: {
-                        coordinate: { latitude, longitude },
-                      },
-                    }) =>{
-                      setMapMarker({
-                        latitude,
-                        longitude,
-                        latitudeDelta: 0.01,
-                        longitudeDelta: 0.01,
-                      })
-                      const address = await mapRef.current?.addressForCoordinate({
-                        latitude,
-                        longitude
-                      })
-                      setFieldValue(`${key}.location`, address.subThoroughfare ? address.thoroughfare + " " + address.subThoroughfare : address.thoroughfare)}
+              <ListItem.Accordion
+                key={key}
+                content={<Text h3>{value.name || "Activity"}</Text>}
+                isExpanded={expanded[key]}
+                onPress={() => {
+                  setExpanded({ ...expanded, [key]: !expanded[key] });
+                }}
+                borderWidth={1}
+                borderRadius={2}
+              >
+                <ListItem borderWidth={1} borderRadius={0}>
+                  <ListItem.Content bottomDivider>
+                    <Input
+                      placeholder="Input name of activity"
+                      onChangeText={handleChange(`${key}.name`)}
+                      value={value.name}
+                    />
+                    <MapView
+                      ref={mapRef}
+                      style={styles.map}
+                      showsUserLocation
+                      followsUserLocation
+                      onPoiClick={({
+                        nativeEvent: {
+                          coordinate: { latitude, longitude },
+                          name,
+                          placeId
+                        },
+                      }) => {
+                        setMapMarker({
+                          latitude,
+                          longitude,
+                          latitudeDelta: 0.01,
+                          longitudeDelta: 0.01,
+                        })
+                        setFieldValue(`${key}.location`, name)
+                      }
+                        // setFieldValue(`${key}.location`, {
+                        //   name, latitude, longitude, placeId
+                        // })}
+                      }
+                      onMarkerPress={(e) => { console.log(e) }}
+                      onPress={async ({
+                        nativeEvent: {
+                          coordinate: { latitude, longitude },
+                        },
+                      }) => {
+                        setMapMarker({
+                          latitude,
+                          longitude,
+                          latitudeDelta: 0.01,
+                          longitudeDelta: 0.01,
+                        })
+                        const address = await mapRef.current?.addressForCoordinate({
+                          latitude,
+                          longitude
+                        })
+                        setFieldValue(`${key}.location`, address.subThoroughfare ? address.thoroughfare + " " + address.subThoroughfare : address.thoroughfare)
+                      }
 
-                      // setFieldValue(`${key}.location`, {
-                      //   name: address.subThoroughfare ? address.thoroughfare + " " + address.subThoroughfare : address.thoroughfare, latitude, longitude
-                      // })}                    
-                    }
-                    initialRegion={location}
-                  >
-                    {mapMarker && <Marker coordinate={mapMarker} />}
-                  </MapView>
-                  <Input
-                    placeholder="Specify Your location On the Map"
-                    onChangeText={handleChange(`${key}.location`)}
-                    value={value.location?.name}
-                    editable={false}
-                    disabled={true}
-                  />
+                        // setFieldValue(`${key}.location`, {
+                        //   name: address.subThoroughfare ? address.thoroughfare + " " + address.subThoroughfare : address.thoroughfare, latitude, longitude
+                        // })}                    
+                      }
+                      initialRegion={location}
+                    >
+                      {mapMarker && <Marker coordinate={mapMarker} />}
+                    </MapView>
+                    <Input
+                      placeholder="Specify Your location On the Map"
+                      onChangeText={handleChange(`${key}.location`)}
+                      value={value.location?.name}
+                      editable={false}
+                      disabled={true}
+                    />
                     <Input
                       placeholder="Input name of activity"
                       onChangeText={handleChange(`${key}.name`)}
@@ -286,13 +302,16 @@ export default function ActivityCards({ navigation }) {
                         editable={false}
                         value={value.start_time.toLocaleTimeString()}
                       />
-                      <Button onPress={() => {setShowStartTimeDatePicker({
-                            ...showStartTimeDatePicker,
-                            [key]: !showStartTimeDatePicker[key],
-                          });
-                          }}>
+                      <View style={{position:'absolute',right: 10, bottom: 30, alignSelf:'flex-end'}}>
+                      <Button onPress={() => {
+                        setShowStartTimeDatePicker({
+                          ...showStartTimeDatePicker,
+                          [key]: !showStartTimeDatePicker[key],
+                        });
+                      }}>
                         Input
                       </Button>
+                    </View>
                     </View>
                     {showStartTimeDatePicker[key] && (
                       <DateTimePicker
@@ -314,13 +333,16 @@ export default function ActivityCards({ navigation }) {
                         editable={false}
                         value={value.end_time.toLocaleTimeString()}
                       />
-                      <Button onPress={() => {setShowEndTimeDatePicker({
-                            ...showEndTimeDatePicker,
-                            [key]: !showEndTimeDatePicker[key],
-                          });
-                          }}>
+                      <View style={{position:'absolute',right: 10, bottom: 30, alignSelf:'flex-end'}}>
+                      <Button onPress={() => {
+                        setShowEndTimeDatePicker({
+                          ...showEndTimeDatePicker,
+                          [key]: !showEndTimeDatePicker[key],
+                        });
+                      }}>
                         Input
                       </Button>
+                      </View>
                     </View>
                     {showEndTimeDatePicker[key] && (
                       <DateTimePicker
@@ -357,34 +379,34 @@ export default function ActivityCards({ navigation }) {
                     </Button>
                   </ListItem.Content>
                 </ListItem>
-            </ListItem.Accordion>
-          ))}
-          <View style={styles.calendars}>
-            {isPublishClicked && calendars?.length > 0 && (
-              <Text>Choose which calendar to update</Text>
-            )}
-            {isPublishClicked &&
-              calendars?.map((cal) => (
-                <View key={cal.id} style={styles.row}>
-                  <Button
-                    containerStyle={{
-                      marginBottom: 10,
-                    }}
-                    type="solid"
-                    onPress={async () => {
-                      await saveChosenCalendar(cal);
-                      publishEventsToGoogleCalendar(cal.id);
-                    }}
-                  >
-                    {cal.summary}
-                    {cal.primary && <Badge value="primary" status="primary" />}
-                  </Button>
-                </View>
-              ))}
+              </ListItem.Accordion>
+            ))}
+            <View style={styles.calendars}>
+              {isPublishClicked && calendars?.length > 0 && (
+                <Text>Choose which calendar to update</Text>
+              )}
+              {isPublishClicked &&
+                calendars?.map((cal) => (
+                  <View key={cal.id} style={styles.row}>
+                    <Button
+                      containerStyle={{
+                        marginBottom: 10,
+                      }}
+                      type="solid"
+                      onPress={async () => {
+                        await saveChosenCalendar(cal);
+                        publishEventsToGoogleCalendar(cal.id);
+                      }}
+                    >
+                      {cal.summary}
+                      {cal.primary && <Badge value="primary" status="primary" />}
+                    </Button>
+                  </View>
+                ))}
+            </View>
           </View>
-        </View>
-      )}
-    </Formik>
+        )}
+      </Formik>
     </ScrollView>
   );
 }
