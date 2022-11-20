@@ -17,7 +17,7 @@ import {
 WebBrowser.maybeCompleteAuthSession();
 
 export default function HomeScreen({ navigation }) {
-  const [homeAddress, setHomeAddress] = useState("");
+  const [homeAddress, setHomeAddress] = useState("Boschstraße 4");
   const [isPublished, setIsPublished] = useState(false);
   const [isGoogleAuthorised, setIsGoogleAuthorised] = useState(false);
   const [request, response, promptAsync] = Google.useAuthRequest({
@@ -30,6 +30,7 @@ export default function HomeScreen({ navigation }) {
     if (response?.type === "success") {
       const { authentication } = response;
       saveGoogleAuthorisation(response);
+      setIsGoogleAuthorised(true);
     }
   }, [response]);
 
@@ -78,7 +79,7 @@ export default function HomeScreen({ navigation }) {
         )}
       </View>
       <Input
-        placeholder={"Type you home address here"}
+        placeholder={"Type your home address here"}
         value={homeAddress}
         onChange={setHomeAddress}
       />

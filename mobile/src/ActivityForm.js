@@ -85,16 +85,19 @@ export default function ActivityCards({ navigation }) {
           end: { dateTime: moment(activity.end_time, "YYYY-M-D H:mm:s").toDate() },
           endTimeUnspecified: !activity.end_time,
           summary: activity.name,
-          location: activity.location,
+          location: Array.isArray(activity.location) ? `${activity.location[0] || activity.location[1]} - ${activity.location[activity.location.length -1] || activity.location[activity.location.length -2]}` : activity.location,
         };
       });
-      console.log(google_event_objects)
 
-      await Promise.all(
-        google_event_objects.map((event) =>
-          insertEventToGoogleCalendar(calendarId, event)
-        )
-      );
+      for (let i = 0; i < Math.ceil(google_event_objects.length / 3); i++) {
+        console.log("helloo...", google_event_objects.slice(i * 3,(i+1)*3))
+        await Promise.all(
+            google_event_objects.slice(i * 3,(i+1)*3).map((event) =>
+              insertEventToGoogleCalendar(calendarId, event)
+            )
+          );
+          await new Promise(r => setTimeout(r, 1000));
+      }
     }
   };
 
@@ -252,18 +255,25 @@ export default function ActivityCards({ navigation }) {
               </View>
             )}
             {generatedSchedule?.map(
-              ({ name, start_time, end_time, from, to, location }, i) => (
+              ({ name, start_time, end_time, location, travel_plan }, i) => (
                 <React.Fragment key={i}>
                   <Text h3>
                     {i + 1}. {name}
                   </Text>
                   <View style={styles.row}>
-                    <Text>{start_time}</Text>
-                    <Text>{end_time}</Text>
+                    <Text>{start_time} - {end_time}</Text>
                   </View>
                   <View style={styles.row}>
-                    <Text>{from ? `${from} - ${to}` : location}</Text>
+                    <Text>{Array.isArray(location) ? `${location[0] || location[1]} - ${location[location.length -1] || location[location.length -2]}` : location}</Text>
                   </View>
+                  {travel_plan?.plan.map((track, i) =>
+                  <View key={i}>
+                    
+                    <Text>{track.model} {track.station_line && `- ${track.station_line}`} {track.platform && `- Gleis ${track.platform}`}</Text>
+                    <Text>{track.start_station && `- ${track.start_station} -`} {track.end_station}</Text>
+                    <Text>{track.departure} - {track.arrival}</Text>
+                    <Text>--------------------------------------------------------------------------</Text>
+                    </View>)}
                 </React.Fragment>
               )
             )}

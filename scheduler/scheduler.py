@@ -29,8 +29,8 @@ class TravelPlan:
                                         "platform": self.platform[i],
                                        "start_station": self.start_station[i],
                                         "end_station": self.end_station[i],
-                                        "departure": self.departures[i],
-                                       "arrival": self.arrivals[i]})
+                                        "departure": self.departures[i].strftime("%Y-%m-%d %H:%M:%S"),
+                                       "arrival": self.arrivals[i].strftime("%Y-%m-%d %H:%M:%S")})
         return travel_plan
 
 class Activity:
@@ -150,7 +150,7 @@ def extract_uni_activities(calendar_file):
     uni_activities = []
     for component in ecal.walk():
         if component.name == 'VEVENT':
-            if component.decoded("dtstart").strftime("%Y-%m-%d") == datetime.strptime('2022-11-30', "%Y-%m-%d").strftime("%Y-%m-%d"):
+            if component.decoded("dtstart").strftime("%Y-%m-%d") == datetime.strptime('2022-11-20', "%Y-%m-%d").strftime("%Y-%m-%d"):
                 name = str(component.get('summary'))
                 start_time = component.decoded("dtstart").replace(tzinfo=None)
                 end_time = component.decoded("dtend").replace(tzinfo=None)
@@ -176,6 +176,7 @@ def create_schedule(todo_activities, uni_activities, start_station, end_station,
     schedule = Schedule(start_station=start_station, end_station=end_station, latest_arrival=arrival_time)
     
     # Insert uni activities to schedule
+    print("uni", uni_activities)
     if uni_activities != None:
         for act in uni_activities:
             schedule.add_activity(act)

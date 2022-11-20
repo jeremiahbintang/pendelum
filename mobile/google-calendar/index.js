@@ -33,9 +33,9 @@ const insertEventToGoogleCalendar = async (_id, data) => {
     }
   )
     .then((res) => res.json())
-    .catch((err) => console.err(err))
-    console.info("Insert event to cal... ", response.error.errors)
-    return response;
+    .catch((err) => console.err(err));
+  console.info("Insert event to cal... ", response);
+  return response;
 };
 
 export { listCalendarsFromGoogle, insertEventToGoogleCalendar };
