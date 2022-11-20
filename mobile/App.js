@@ -7,6 +7,19 @@ import Signup from "./src/Signup";
 
 import { getPhoneNumber, deletePhoneNumber } from "./storage";
 
+import { ThemeProvider, Button, createTheme } from '@rneui/themed';
+const theme = createTheme({
+  lightColors: {
+    // primary: '#e7e7e8',
+    primary:'#0000ff',
+
+  },
+  darkColors: {
+    primary: '#000',
+  },
+  mode: 'light',
+});
+
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [phone_number, setPhoneNumber] = useState();
@@ -20,12 +33,13 @@ export default function App() {
   }, []);
 
   return (
+    <ThemeProvider theme={theme}>
     <NavigationContainer>
       <Stack.Navigator>
         {false ? (
           <>
           <Stack.Screen
-            name="Signup"
+            name="Registration"
             component={Signup}
           />
           <Stack.Screen
@@ -35,12 +49,13 @@ export default function App() {
           </>
         ) : (
           <Stack.Screen
-            name="Home"
+            name="Pendelum"
             component={HomeScreen}
             options={{ title: "Home" }}
           />
         )}
       </Stack.Navigator>
     </NavigationContainer>
+    </ThemeProvider>
   );
 }
