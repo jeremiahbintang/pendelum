@@ -77,14 +77,14 @@ export default function ActivityCards({ navigation }) {
   const [generatedSchedule, setGeneratedSchedule] = useState(null);
 
   const publishEventsToGoogleCalendar = async (calendarId) => {
-    if (Object.keys(activities).length > 0) {
-      const google_event_objects = Object.values(activities).map((activity) => {
+    if (generatedSchedule.length > 0) {
+      const google_event_objects = generatedSchedule.map((activity) => {
         return {
           start: { dateTime: activity.start_time },
           end: { dateTime: activity.end_time },
           endTimeUnspecified: !activity.end_time,
-          summary: activity.name,
-          location: activity.location,
+          summary: decodeURIComponent(JSON.parse(activity.name)),
+          location: decodeURIComponent(JSON.parse(activity.location)),
         };
       });
 
@@ -107,7 +107,7 @@ export default function ActivityCards({ navigation }) {
   useEffect(() => {
     const fetch = async () => {
       const activities = await getTodayActivities();
-      console.log(activities)
+      console.log(activities);
       if (activities) {
         const formValues = { ...activities };
         setActivities(formValues);
@@ -186,7 +186,7 @@ export default function ActivityCards({ navigation }) {
                   borderRadius: 30,
                   marginVertical: 5,
                 }}
-                onPress={() => {
+                onPress={async () => {
                   const payload = Object.values(values).map((value) => ({
                     ...value,
                     start_time: moment(value.start_time).format(
@@ -194,8 +194,8 @@ export default function ActivityCards({ navigation }) {
                     ),
                     end_time: moment(value.end_time).format("YYYY-M-D H:mm:s"),
                   }));
-                  const generatedSchedule = generateSchedule(payload);
-                  setGeneratedSchedule(generateSchedule)
+                  const generatedSchedule = await generateSchedule(payload);
+                  setGeneratedSchedule(generatedSchedule);
                 }}
               >
                 Schedule it for me!
@@ -222,15 +222,22 @@ export default function ActivityCards({ navigation }) {
                 Publish!
               </Button>
             </View>
-            {generatedSchedule.map((plan, i) => (
-              <React.Fragment key={i}>
-                <Text h3>{i+1}. {plan.name}</Text>
-                <View style={styles.row}>
-                  <Text>{plan.start_time}</Text>
-                  <Text>{plan.end_time}</Text>
-                </View>
-              </React.Fragment>
-            ))}
+            {generatedSchedule?.map(
+              ({ name, start_time, end_time, from, to, location }, i) => (
+                <React.Fragment key={i}>
+                  <Text h3>
+                    {i + 1}. {name}
+                  </Text>
+                  <View style={styles.row}>
+                    <Text>{start_time}</Text>
+                    <Text>{end_time}</Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text>{from ? `${from} - ${to}` : location}</Text>
+                  </View>
+                </React.Fragment>
+              )
+            )}
             {Object.entries(values).map(([key, value]) => (
               <ListItem.Accordion
                 key={key}
@@ -408,7 +415,7 @@ export default function ActivityCards({ navigation }) {
                     <Button
                       /*style={styles.button}*/
                       onPress={async () => {
-                        console.info(value)
+                        console.info(value);
                         if (value._id) {
                           await updateTodayActivity(value._id, value);
                         } else {
