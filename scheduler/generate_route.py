@@ -29,7 +29,11 @@ def generate_route(start, dest, time=None, arrival_time=False):
                 break
 
     # 	start_time:
-    start_time = routes[route_choose]["departure_datetime"]
+    start_time = None
+    if arrival_time == False:
+        start_time = time
+    else:
+        start_time = routes[route_choose]["departure_datetime"]
     # 	end_time: 
     end_time = routes[route_choose]["arrival_datetime"]
 
@@ -45,13 +49,18 @@ def generate_route(start, dest, time=None, arrival_time=False):
     name_of_station_dest = None
     
     for i in range(len(routes[route_choose]["connectionPartList"])):
-        model.append(routes[route_choose]["connectionPartList"][i]["connectionPartType"])
+        mod = routes[route_choose]["connectionPartList"][i]["connectionPartType"]
+        model.append(mod)
 
         if "label" in routes[route_choose]["connectionPartList"][i]:
             station_line.append(routes[route_choose]["connectionPartList"][i]["label"])
+        else:
+            station_line.append("")
 
         if "departurePlatform" in routes[route_choose]["connectionPartList"][i]:
             platform.append(routes[route_choose]["connectionPartList"][i]["departurePlatform"])
+        else:
+            platform.append("")
         
         if "departure" in routes[route_choose]["connectionPartList"][i]:
             departures.append(datetime.fromtimestamp(routes[route_choose]["connectionPartList"][i]["departure"] / 1000))
