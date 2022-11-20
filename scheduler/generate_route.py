@@ -1,6 +1,7 @@
 from mvg_api import *
 import json
 import pprint
+from datetime import datetime
 
 def generate_route(start, dest, time=None, arrival_time=False):
     
@@ -34,36 +35,43 @@ def generate_route(start, dest, time=None, arrival_time=False):
 
     #   model: U-Bahn | S-Bahn | Bus | Tram | Walking "connectionPartType" "FOOTWAY" or "TRANSPORTATION"
     model = []
+    station_line = []
+    platform = []
+    departures = []
+    arrivals = []
+    name_of_station_start = None
+    lock1 = 0
+    lock2 = 0
+    name_of_station_dest = None
+    
     for i in range(len(routes[route_choose]["connectionPartList"])):
         model.append(routes[route_choose]["connectionPartList"][i]["connectionPartType"])
 
-	# 	station_line: number "label" Ex "U6"
-    station_line = []
-    for i in range(len(routes[route_choose]["connectionPartList"])):
         if "label" in routes[route_choose]["connectionPartList"][i]:
             station_line.append(routes[route_choose]["connectionPartList"][i]["label"])
 
-    # 	platform: number, (gleis) "departurePlatform"
-    platform = []
-    for i in range(len(routes[route_choose]["connectionPartList"])):
         if "departurePlatform" in routes[route_choose]["connectionPartList"][i]:
             platform.append(routes[route_choose]["connectionPartList"][i]["departurePlatform"])
+        
+        if "departure" in routes[route_choose]["connectionPartList"][i]:
+            departures.append(datetime.fromtimestamp(routes[route_choose]["connectionPartList"][i]["departure"] / 1000))
+        
+        if "arrival" in routes[route_choose]["connectionPartList"][i]:
+            arrivals.append(datetime.fromtimestamp(routes[route_choose]["connectionPartList"][i]["arrival"] / 1000))
 
-	# 	name_of_station: string, "connectionPartList" "from" "name" "to" "name"
-    name_of_station_start = None
-    for i in range(len(routes[route_choose]["connectionPartList"])):
         if "name" in routes[route_choose]["connectionPartList"][i]["from"]:
-            name_of_station_start = routes[route_choose]["connectionPartList"][i]["from"]["name"]
-            break
-    name_of_station_dest = None
-    for i in range(len(routes[route_choose]["connectionPartList"])):
+            if lock1 == 0:
+                name_of_station_start = routes[route_choose]["connectionPartList"][i]["from"]["name"]
+                lock1 = 1
+
         if "name" in routes[route_choose]["connectionPartList"][-1-i]["to"]:
-            name_of_station_dest = routes[route_choose]["connectionPartList"][-1-i]["to"]["name"]
-            break
+            if lock2 == 0:
+                name_of_station_dest = routes[route_choose]["connectionPartList"][-1-i]["to"]["name"]
+                lock2 = 1
 	    
-    route_json = pprint.pformat(routes[-1]).replace("'", '"')
-    with open('route.json', 'w') as f:
-        f.write(route_json)
+#     route_json = pprint.pformat(routes[-1]).replace("'", '"')
+#     with open('route.json', 'w') as f:
+#         f.write(route_json)
 
     return {"start_time": start_time,
             "end_time": end_time,
@@ -71,8 +79,12 @@ def generate_route(start, dest, time=None, arrival_time=False):
             "station_line": station_line,
             "platform": platform,
             "start_station": name_of_station_start,
-            "end_station": name_of_station_dest
+            "end_station": name_of_station_dest,
+            "departures": departures,
+            "arrivals": arrivals,
+            "duration": end_time - start_time
     }
+
 
 
 
