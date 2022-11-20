@@ -193,7 +193,7 @@ const getTodayActivities = async () => {
 
 const saveTodayActivity = async (activity) => {
   try {
-    const activities = await getTodayActivities();
+    let activities = await getTodayActivities();
 
     activity._id = uuid.v4();
 

@@ -3,6 +3,8 @@ import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
+import moment from "moment";
+
 import ActivityCards from "./ActivityCards";
 import ActivityForm from "./ActivityForm";
 import { Input, Text, Button, Badge } from "@rneui/themed";
@@ -44,13 +46,13 @@ export default function HomeScreen({ navigation }) {
       const authorisation = await getGoogleAuthorisation();
 
       if (authorisation) {
-        const expiresIn = new Date(
+        const expiresIn = moment.unix(
           authorisation.authentication.issuedAt +
             Number(authorisation.authentication.expiresIn)
         );
-        const now = new Date();
+        const now = moment();
         console.log(expiresIn, now);
-        if (now > expiresIn) {
+        if (now.isBefore(expiresIn)) {
           setIsGoogleAuthorised(true);
         }
       }
