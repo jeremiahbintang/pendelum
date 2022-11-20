@@ -24,7 +24,7 @@ def generate_route(start, dest, time=None, arrival_time=False):
     else:
         for j in range(len(routes)):
             end_time = routes[-1-j]["arrival_datetime"]
-            if end_time < time:
+            if end_time <= time:
                 route_choose = -1-j
                 break
 
@@ -93,7 +93,6 @@ def generate_route(start, dest, time=None, arrival_time=False):
             "arrivals": arrivals,
             "duration": end_time - start_time
     }
-
 
 
 

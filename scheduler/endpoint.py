@@ -13,13 +13,12 @@ def get_schedule(request):
     uni_activities = extract_uni_activities('personal_20221119_172719.ics')
 
     # Get travel activities
-    departure_time = request["departure_time"]
     departure_place = request["departure_place"]
     arrival_time = request["arrival_time"]
     arrival_place = request["arrival_place"]
 
     # Create schedule
-    schedule = create_schedule(todo_activities, uni_activities, start_station=departure_place, end_station=arrival_place, departure_time=departure_time, arrival_time=arrival_time)
+    schedule = create_schedule(todo_activities, uni_activities, start_station=departure_place, end_station=arrival_place, arrival_time=arrival_time)
     schedule.print_schedule()
 
     return schedule.convert_to_json()
