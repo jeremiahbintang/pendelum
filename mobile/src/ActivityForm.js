@@ -50,18 +50,21 @@ export default function ActivityCards({ navigation }) {
   const [isPublishClicked, setIsPublishedClicked] = useState(false);
   const [mapMarker, setMapMarker] = useState(null);
 
-  const publishEventsToGoogleCalendat = (calendarId) => {
-    const google_event_objects = activities.map((activity) => {
-      return {
-        start: { dateTime: activity.start_time },
-        end: { dateTime: activity.end_time },
-        endTimeUnspecified: !!activity.end_time,
-        summary: activity.name,
-        location: activity.location,
-      };
-    });
+  const publishEventsToGoogleCalendar = async (calendarId) => {
+    if (Object.keys(activities).length > 0) {
+      const google_event_objects = Object.values(activities).map((activity) => {
+        return {
+          start: { dateTime: activity.start_time },
+          end: { dateTime: activity.end_time },
+          endTimeUnspecified: !activity.end_time,
+          summary: activity.name,
+          location: activity.location,
+        };
+      });
 
-    insertEventToGoogleCalendar;
+      await Promise.all(google_event_objects.map((event) => insertEventToGoogleCalendar(calendarId, event)))
+    }
+    ;
   };
 
   useEffect(() => {
@@ -75,8 +78,10 @@ export default function ActivityCards({ navigation }) {
   useEffect(() => {
     const fetch = async () => {
       const activities = await getTodayActivities();
-      const formValues = { ...activities };
-      setActivities(formValues);
+      if (activities){
+        const formValues = { ...activities };
+        setActivities(formValues);
+      }
     };
     fetch();
   }, [runFetch]);
@@ -114,7 +119,19 @@ export default function ActivityCards({ navigation }) {
               }}
             >
               <ListItem>
-                <ListItem.Content bottomDivider>
+                <ListItem.Content bottomDivider><Button
+                    style={styles.button}
+                    onPress={async () => {
+                      if (value._id) {
+                        await updateTodayActivity(value._id, value);
+                      } else {
+                        await saveTodayActivity(value);
+                      }
+                      setRunFetch(runFetch + 1);
+                    }}
+                  >
+                    Add
+                  </Button>
                   <Input
                     placeholder="Input name of activity"
                     onChangeText={handleChange(`${key}.name`)}
@@ -123,7 +140,7 @@ export default function ActivityCards({ navigation }) {
                   <Input
                     placeholder="Input location"
                     onChangeText={handleChange(`${key}.location`)}
-                    value={value.location?.name}
+                    value={value.location}
                     editable={false}
                   />
                   <MapView
@@ -144,9 +161,10 @@ export default function ActivityCards({ navigation }) {
                         latitudeDelta: 0.01,
                         longitudeDelta: 0.01,
                       })
-                      setFieldValue(`${key}.location`, {
-                        name, latitude, longitude, placeId
-                      })}
+                      setFieldValue(`${key}.location`, name)}
+                      // setFieldValue(`${key}.location`, {
+                      //   name, latitude, longitude, placeId
+                      // })}
                     }
                     onMarkerPress={(e) => {console.log(e)}}
                     onPress={async ({
@@ -164,12 +182,11 @@ export default function ActivityCards({ navigation }) {
                         latitude,
                         longitude
                       })
-                      console.log(address)
-                      setFieldValue(`${key}.location`, {
-                        name: address.subThoroughfare ? address.thoroughfare + " " + address.subThoroughfare : address.thoroughfare, latitude, longitude
-                      })}
+                      setFieldValue(`${key}.location`, address.subThoroughfare ? address.thoroughfare + " " + address.subThoroughfare : address.thoroughfare)}
 
-                    
+                      // setFieldValue(`${key}.location`, {
+                      //   name: address.subThoroughfare ? address.thoroughfare + " " + address.subThoroughfare : address.thoroughfare, latitude, longitude
+                      // })}                    
                     }
                     initialRegion={location}
                   >
@@ -179,7 +196,7 @@ export default function ActivityCards({ navigation }) {
                     <Input
                       placeholder="Input start time"
                       editable={false}
-                      value={value.start_time.toLocaleTimeString()}
+                      value={new Date(value.start_time).toLocaleTimeString()}
                     />
                     <Button
                       onPress={() =>
@@ -211,7 +228,7 @@ export default function ActivityCards({ navigation }) {
                     <Input
                       placeholder="Input end time"
                       editable={false}
-                      value={value.end_time.toLocaleTimeString()}
+                      value={new Date(value.end_time).toLocaleTimeString()}
                     />
                     <Button
                       onPress={() =>
@@ -315,11 +332,11 @@ export default function ActivityCards({ navigation }) {
             </Button>
           </View>
           <View style={styles.calendars}>
-            {isPublishClicked && calendars.length > 0 && (
+            {isPublishClicked && calendars?.length > 0 && (
               <Text>Choose which calendar to update</Text>
             )}
             {isPublishClicked &&
-              calendars.map((cal) => (
+              calendars?.map((cal) => (
                 <View key={cal.id} style={styles.row}>
                   <Button
                     containerStyle={{
@@ -328,7 +345,7 @@ export default function ActivityCards({ navigation }) {
                     type="solid"
                     onPress={async () => {
                       await saveChosenCalendar(cal);
-                      publishEventsToGoogleCalendat(calendarId);
+                      publishEventsToGoogleCalendar(cal.id);
                     }}
                   >
                     {cal.summary}
