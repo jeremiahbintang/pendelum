@@ -78,15 +78,17 @@ export default function ActivityCards({ navigation }) {
 
   const publishEventsToGoogleCalendar = async (calendarId) => {
     if (generatedSchedule.length > 0) {
+      console.log(generatedSchedule)
       const google_event_objects = generatedSchedule.map((activity) => {
         return {
-          start: { dateTime: activity.start_time },
-          end: { dateTime: activity.end_time },
+          start: { dateTime: moment(activity.start_time, "YYYY-M-D H:mm:s").toDate() },
+          end: { dateTime: moment(activity.end_time, "YYYY-M-D H:mm:s").toDate() },
           endTimeUnspecified: !activity.end_time,
-          summary: decodeURIComponent(JSON.parse(activity.name)),
-          location: decodeURIComponent(JSON.parse(activity.location)),
+          summary: activity.name,
+          location: activity.location,
         };
       });
+      console.log(google_event_objects)
 
       await Promise.all(
         google_event_objects.map((event) =>
@@ -222,6 +224,33 @@ export default function ActivityCards({ navigation }) {
                 Publish!
               </Button>
             </View>
+            {isPublishClicked && (
+              <View style={styles.calendars}>
+                {calendars?.length > 0 && (
+                  <Text>Choose which calendar to update</Text>
+                )}
+
+                {calendars?.map((cal) => (
+                  <View key={cal.id} style={styles.row}>
+                    <Button
+                      containerStyle={{
+                        marginBottom: 10,
+                      }}
+                      type="solid"
+                      onPress={async () => {
+                        await saveChosenCalendar(cal);
+                        publishEventsToGoogleCalendar(cal.id);
+                      }}
+                    >
+                      {cal.summary}
+                      {cal.primary && (
+                        <Badge value="primary" status="primary" />
+                      )}
+                    </Button>
+                  </View>
+                ))}
+              </View>
+            )}
             {generatedSchedule?.map(
               ({ name, start_time, end_time, from, to, location }, i) => (
                 <React.Fragment key={i}>
@@ -430,31 +459,6 @@ export default function ActivityCards({ navigation }) {
                 </ListItem>
               </ListItem.Accordion>
             ))}
-            <View style={styles.calendars}>
-              {isPublishClicked && calendars?.length > 0 && (
-                <Text>Choose which calendar to update</Text>
-              )}
-              {isPublishClicked &&
-                calendars?.map((cal) => (
-                  <View key={cal.id} style={styles.row}>
-                    <Button
-                      containerStyle={{
-                        marginBottom: 10,
-                      }}
-                      type="solid"
-                      onPress={async () => {
-                        await saveChosenCalendar(cal);
-                        publishEventsToGoogleCalendar(cal.id);
-                      }}
-                    >
-                      {cal.summary}
-                      {cal.primary && (
-                        <Badge value="primary" status="primary" />
-                      )}
-                    </Button>
-                  </View>
-                ))}
-            </View>
           </View>
         )}
       </Formik>

@@ -22,7 +22,6 @@ const listCalendarsFromGoogle = async () => {
 
 const insertEventToGoogleCalendar = async (_id, data) => {
   const auth = await getGoogleAuthorisation();
-  console.log(data)
   const response = await fetch(
     `https://www.googleapis.com/calendar/v3/calendars/${_id}/events?access_token=${auth.authentication.accessToken}`,
     {
@@ -35,7 +34,8 @@ const insertEventToGoogleCalendar = async (_id, data) => {
   )
     .then((res) => res.json())
     .catch((err) => console.err(err))
-  return response;
+    console.info("Insert event to cal... ", response.error.errors)
+    return response;
 };
 
 export { listCalendarsFromGoogle, insertEventToGoogleCalendar };
