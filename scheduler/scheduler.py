@@ -5,8 +5,29 @@ from pathlib import Path
 import os
 import pytz
 
+class TravelPlan:
+    def __init__(self, model, station_line, platform, start_station, end_station, departures, arrivals):
+        self.model = model
+        self.station_line = station_line
+        self.platform = platform
+        self.start_station = start_station
+        self.end_station = end_station
+        self.departures = departures
+        self.arrivals = arrivals
+    
+    def print_plan(self):
+        print("Start station:", self.start_station)
+        for i in range(len(self.model)):
+            print('('+self.model[i]+')', self.station_line[i], "-", self.platform[i], "(", self.departures[i], "-", self.arrivals[i], ")")
+        print("End station:", self.end_station)
+    
+    def convert_to_json(self):
+        return {"model": self.model, "station_line": self.station_line, "platform": self.platform,
+               "start_station": self.start_station, "end_station": self.end_station,
+               "departures": self.departures, "arrivals": self.arrivals}
+
 class Activity:
-    def __init__(self, name=None, start_time=None, end_time=None, duration=None, location=None, priority=None):
+    def __init__(self, name=None, start_time=None, end_time=None, duration=None, location=None, priority=None, travel_plan=None):
         self.name = name
         if (start_time == None) and (end_time != None):
             self.start_time = end_time - duration
@@ -22,6 +43,7 @@ class Activity:
             self.duration = duration
         self.location = location
         self.priority = priority
+        self.travel_plan = travel_plan
 
 class EmptySlot:
     def __init__(self, start_time, end_time, prev_activity, next_activity):
@@ -43,20 +65,48 @@ class Schedule:
     
     def find_empty_slots(self):  
         empty_slots = []
+        self._sort_based_on_start_time()
         for i in range(len(self.activities)-1):
             prev_act = self.activities[i]
             next_act = self.activities[i+1]
-            duration = (next_act.start_time - prev_act.end_time).seconds
+            a = None
+            b = None
+            if prev_act.travel_plan == None:
+                a = prev_act.end_time
+            else:
+                a = prev_act.travel_plan.arrivals[-1]
+            
+            print("a", a)
+            
+            b = next_act.start_time
+            print("b", b)
+                
+            duration = (b - a).seconds
+            print("duration", duration)
+            if duration < 0:
+                duration = 0
+                
             if duration > 0:
-                empty_slots.append(EmptySlot(start_time=prev_act.end_time, end_time=next_act.start_time, prev_activity=prev_act, next_activity=next_act))
+                empty_slots.append(EmptySlot(start_time=a, end_time=b, prev_activity=prev_act, next_activity=next_act))
         return empty_slots
     
     def print_schedule(self):
         for act in self.activities:
             print(act.start_time, "-", act.end_time, ":", act.name)
+            if act.travel_plan != None:
+                print("--- Travel plan ---")
+                act.travel_plan.print_plan()
+            print("")
     
     def convert_to_json(self):
-        return [{"name": act.name, "start_time": act.start_time, "end_time": act.end_time, "duration": act.duration, "location": act.location} for act in self.activities]
+        output = []
+        for act in self.activities:
+            act_json = {"name": act.name, "start_time": act.start_time, "end_time": act.end_time,
+                           "duration": act.duration, "location": act.location}
+            if act.travel_plan != None:
+                act_json["travel_plan"] = act.travel_plan.convert_to_json()
+            output.append(act_json)
+        return output
 
 def make_activity_objects(activities):
     processed_activities = []
@@ -108,10 +158,7 @@ def assign_activity_priorities(activities):
             activity.priority = 4
     activities.sort(key=lambda x: x.priority)
 
-def get_route_duration(loc1, loc2):
-    return 0
-
-def create_schedule(remaining_activities, uni_activities=None, travel_activities=None):
+def create_schedule(todo_activities, uni_activities, start_station, end_station, departure_time, arrival_time):
     schedule = Schedule()
     
     # Insert uni activities to schedule
@@ -119,17 +166,11 @@ def create_schedule(remaining_activities, uni_activities=None, travel_activities
         for act in uni_activities:
             schedule.add_activity(act)
         
-    # Insert travel activities to schedule
-    if travel_activities != None:
-        for act in travel_activities:
-            schedule.add_activity(act)
-        
-    # Assign priority to remaining activities
-    assign_activity_priorities(remaining_activities)
+    # Assign priority to todo activities
+    assign_activity_priorities(todo_activities)
     
-    # Schedule remaining activities based on priority
-    for act in remaining_activities:
-        print(act.name, act.priority)
+    # Schedule todo activities based on priority
+    for act in todo_activities:
         empty_slots = schedule.find_empty_slots()
         
         if act.priority == 1:
@@ -139,19 +180,49 @@ def create_schedule(remaining_activities, uni_activities=None, travel_activities
             min_total_duration = math.inf
             min_activity = None
             for slot in empty_slots:
-                travel_time1 = get_route_duration(slot.prev_activity.location, act.location)
-                travel_time2 = get_route_duration(act.location, slot.next_activity.location)
-                total_duration = travel_time1 + act.duration + travel_time2
+                route1 = None
+                route2 = None
+                
+                travel_time1 = 0
+                if slot.prev_activity.location != act.location:
+                    route = generate_route(start=slot.prev_activity.location, dest=act.location, time=slot.start_time, arrival_time=False)
+                    travel_time1 = route["duration"]
+                    route1 = TravelPlan(model=route["model"], station_line=route["station_line"], platform=route["platform"], start_station=route["start_station"], end_station=route["end_station"], departures=route["departures"], arrivals=route["arrivals"])
+                    slot.prev_activity.travel_plan = route1
+                    
+                travel_time2 = 0
+                if act.location != slot.next_activity.location:
+                    route = generate_route(start=act.location, dest=slot.next_activity.location, time=slot.start_time+travel_time1+act.duration, arrival_time=False)
+                    travel_time2 = route["duration"]
+                    route2 = TravelPlan(model=route["model"], station_line=route["station_line"], platform=route["platform"], start_station=route["start_station"], end_station=route["end_station"], departures=route["departures"], arrivals=route["arrivals"])
+                               
+                total_duration = (travel_time1 + act.duration + travel_time2).seconds
                 if total_duration < min_total_duration:
-                    total_duration = min_total_duration
-                    min_activity = Activity(name=act.name, start_time=slot.prev_activity.end_time, duration=act.duration, location=act.duration)
+                    min_total_duration = total_duration
+                    min_activity = Activity(name=act.name, start_time=slot.prev_activity.end_time+travel_time1, duration=act.duration, location=act.location, travel_plan=route2)
+            
             schedule.add_activity(min_activity)
         
         elif act.priority == 3:
             for slot in empty_slots:
-                slot_duration = slot.end_time - slot.start_time
-                if act.duration < slot_duration:
+                slot_duration = (slot.end_time - slot.start_time).seconds
+                print("slot start time", slot.start_time)
+                print("slot end time", slot.end_time)
+                if act.duration.seconds < slot_duration:
+                    print(slot.prev_activity.name)
+                    print(slot.next_activity.name)
                     schedule.add_activity(Activity(name=act.name, start_time=slot.start_time, duration=act.duration))
                     break
+    
+    # Insert travel activities to schedule
+    departure_route = generate_route(start=start_station, dest=schedule.activities[0].location, time=departure_time, arrival_time=False)
+    departure_travel_plan = TravelPlan(model=departure_route["model"], station_line=departure_route["station_line"], platform=departure_route["platform"], start_station=departure_route["start_station"], end_station=departure_route["end_station"], departures=departure_route["departures"], arrivals=departure_route["arrivals"])
+    departure_activity = Activity(name="Departure", start_time=departure_route["start_time"], end_time=departure_route["end_time"], location=departure_route["end_station"], travel_plan=departure_travel_plan)
+    schedule.add_activity(departure_activity)
+    
+    arrival_route = generate_route(start=schedule.activities[-1].location, dest=end_station, time=arrival_time, arrival_time=True)
+    arrival_travel_plan = TravelPlan(model=arrival_route["model"], station_line=arrival_route["station_line"], platform=arrival_route["platform"], start_station=arrival_route["start_station"], end_station=arrival_route["end_station"], departures=arrival_route["departures"], arrivals=arrival_route["arrivals"])
+    arrival_activity = Activity(name="Arrival", start_time=arrival_route["start_time"], end_time=arrival_route["end_time"], location=arrival_route["start_station"], travel_plan=arrival_travel_plan)
+    schedule.add_activity(arrival_activity)
     
     return schedule
