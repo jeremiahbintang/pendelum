@@ -23,9 +23,15 @@ class TravelPlan:
         print("End station:", self.end_station)
     
     def convert_to_json(self):
-        return {"model": self.model, "station_line": self.station_line, "platform": self.platform,
-               "start_station": self.start_station, "end_station": self.end_station,
-               "departures": self.departures, "arrivals": self.arrivals}
+        travel_plan = {"plan": []}
+        for i in range(len(self.model)):
+            travel_plan["plan"].append({"model": self.model[i], "station_line": self.station_line[i],
+                                        "platform": self.platform[i],
+                                       "start_station": self.start_station[i],
+                                        "end_station": self.end_station[i],
+                                        "departure": self.departures[i],
+                                       "arrival": self.arrivals[i]})
+        return travel_plan
 
 class Activity:
     def __init__(self, name=None, start_time=None, end_time=None, duration=None, location=None, priority=None, travel_plan=None):
