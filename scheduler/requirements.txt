@@ -18,7 +18,10 @@ entrypoints==0.4
 executing==0.8.3
 fastjsonschema==2.15.3
 filelock==3.7.1
+Flask==2.2.2
+Flask-Cors==3.0.10
 flit_core==3.7.1
+gunicorn==20.0.4
 huggingface-hub==0.8.1
 icalendar==5.0.2
 idna==3.3
@@ -28,6 +31,7 @@ ipykernel==6.15.1
 ipython==8.4.0
 ipython-genutils==0.2.0
 ipywidgets==7.7.1
+itsdangerous==2.1.2
 jedi==0.18.1
 Jinja2==3.1.2
 joblib==1.1.0
@@ -53,7 +57,6 @@ parso==0.8.3
 pexpect==4.8.0
 pickleshare==0.7.5
 Pillow==9.2.0
-pip==22.1.2
 prometheus-client==0.14.1
 prompt-toolkit==3.0.30
 psutil==5.9.1
@@ -74,7 +77,6 @@ scipy==1.8.1
 Send2Trash==1.8.0
 sentence-transformers==2.2.2
 sentencepiece==0.1.96
-setuptools==63.1.0
 six==1.16.0
 soupsieve==2.3.1
 stack-data==0.3.0
@@ -92,6 +94,6 @@ typing_extensions==4.3.0
 urllib3==1.26.10
 wcwidth==0.2.5
 webencodings==0.5.1
-wheel==0.37.1
+Werkzeug==2.2.2
 widgetsnbextension==3.6.1
 zipp==3.8.0

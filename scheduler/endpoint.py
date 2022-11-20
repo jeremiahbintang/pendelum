@@ -1,8 +1,10 @@
 from flask import Flask
-from scheduler import Activity, make_activity_objects, create_schedule, extract_uni_activities
-from generate_route import generate_route
+from flask_cors import CORS
+from scheduler.scheduler import Activity, make_activity_objects, create_schedule, extract_uni_activities
+from scheduler.generate_route import generate_route
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/schedule/generate', methods=['POST'])
 def get_schedule(request):
