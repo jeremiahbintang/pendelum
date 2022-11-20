@@ -36,7 +36,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
     <NavigationContainer>
       <Stack.Navigator>
-        {false ? (
+        {true ? (
           <>
           <Stack.Screen
             name="Registration"

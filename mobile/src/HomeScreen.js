@@ -1,14 +1,35 @@
 import React, { useState, useEffect } from "react";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
 import ActivityCards from "./ActivityCards";
 import ActivityForm from "./ActivityForm";
-import { Input, Text, Icon, Card } from "@rneui/themed";
-import { getPublishStatus } from "../storage";
+import { Input, Text, Button, Badge } from "@rneui/themed";
+import {
+  getGoogleAuthorisation,
+  getPublishStatus,
+  saveGoogleAuthorisation,
+} from "../storage";
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function HomeScreen({ navigation }) {
   const [homeAddress, setHomeAddress] = useState("");
   const [isPublished, setIsPublished] = useState(false);
+  const [isGoogleAuthorised, setIsGoogleAuthorised] = useState(false);
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    expoClientId:
+      "449233078289-hkr95dfmou01itchchh1baj1sllmco4p.apps.googleusercontent.com",
+    scopes: ["https://www.googleapis.com/auth/calendar"],
+  });
+
+  useEffect(() => {
+    if (response?.type === "success") {
+      const { authentication } = response;
+      saveGoogleAuthorisation(response);
+    }
+  }, [response]);
 
   useEffect(() => {
     const fetchPublishStatus = async () => {
@@ -16,20 +37,44 @@ export default function HomeScreen({ navigation }) {
       setIsPublished(isPublished);
     };
     fetchPublishStatus();
-  });
+  }, []);
+
+  useEffect(() => {
+    const fetchGoogleAuth = async () => {
+      const authorisation = await getGoogleAuthorisation();
+
+      if (authorisation) {
+        const expiresIn = new Date(
+          authorisation.authentication.issuedAt +
+            Number(authorisation.authentication.expiresIn)
+        );
+        const now = new Date();
+        console.log(expiresIn, now);
+        if (now > expiresIn) {
+          setIsGoogleAuthorised(true);
+        }
+      }
+    };
+    fetchGoogleAuth();
+  }, []);
+
   return (
     <View style={styles.container}>
-       {/* <Card containerStyle={{
-          marginTop: 0,
-          width: 350,
-          borderColor: "black",
-          borderRadius: 20
-        }}> */}
-        
-      <Text h3>
-        <Icon name={'home'} marginVertical={5}/>
-        Welcome to home!
-      </Text>
+      <View>
+        <Text h2>Welcome to home!</Text>
+        {isGoogleAuthorised ? (
+          <Badge value="Google Account is Authorised" color="primary" />
+        ) : (
+          <Button
+            disabled={!request}
+            onPress={() => {
+              promptAsync();
+            }}
+          >
+            Authorise Google Calendar
+          </Button>
+        )}
+      </View>
       <Input
         placeholder={"Type you home address here"}
         value={homeAddress}

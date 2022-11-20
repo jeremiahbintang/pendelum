@@ -59,7 +59,26 @@ class Schedule:
         return [{"name": act.name, "start_time": act.start_time, "end_time": act.end_time, "duration": act.duration, "location": act.location} for act in self.activities]
 
 def make_activity_objects(activities):
-    return [Activity(name=act["name"], start_time=act["start_time"], end_time=act["end_time"], duration=act["duration"], location=act["location"]) for act in activities]
+    processed_activities = []
+    for act in activities:
+        name = None
+        if act["name"] != None:
+            name = act["name"]
+        location = None
+        if act["location"] != None:
+            location = act["location"]
+        start_time = None
+        if act["start_time"] != None:
+            start_time = datetime.strptime(act["start_time"], "%Y-%m-%d %H:%M:%S")
+        end_time = None
+        if act["end_time"] != None:
+            end_time = datetime.strptime(act["end_time"], "%Y-%m-%d %H:%M:%S")
+        duration = None
+        if act["duration"] != None:
+            duration = timedelta(minutes=act["duration"])
+        processed_act = Activity(name=name, start_time=start_time, end_time=end_time, duration=duration, location=location)
+        processed_activities.append(processed_act)
+    return processed_activities
 
 def extract_uni_activities(calendar_file):
     file = open(calendar_file, 'rb')
@@ -71,7 +90,7 @@ def extract_uni_activities(calendar_file):
                 name = str(component.get('summary'))
                 start_time = component.decoded("dtstart").replace(tzinfo=None)
                 end_time = component.decoded("dtend").replace(tzinfo=None)
-                uni_activities.append(Activity(name=name, start_time=start_time, end_time=end_time))
+                uni_activities.append(Activity(name=name, start_time=start_time, end_time=end_time, location="Garching Forschungszentrum"))
     return uni_activities
 
 def assign_activity_priorities(activities):
