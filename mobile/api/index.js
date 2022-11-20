@@ -1,5 +1,5 @@
 import moment from "moment";
-const generateSchedule = async (activities) => {
+const generateSchedule = async (activities,homeAddress) => {
   const departure_time = moment().set('hour', 8).set('minute', 0).set('second', 0).format('YYYY-M-D H:mm:s')
   const arrival_time = moment().set('hour', 21).set('minute', 0).set('second', 0).format('YYYY-M-D H:mm:s')
   console.log(departure_time, arrival_time)
@@ -12,9 +12,9 @@ const generateSchedule = async (activities) => {
     body: JSON.stringify({
       activities,
       departure_time,
-      departure_place: "Boschstraße 4",
+      departure_place: homeAddress,
       arrival_time: arrival_time,
-      arrival_place: "Boschstraße 4"
+      arrival_place: homeAddress
     }),
   })
     .then((response) => {

@@ -64,7 +64,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View>
-        <Text h2>Welcome to home!</Text>
+        <Text h2>Welcome to Pendelum!</Text>
         {isGoogleAuthorised ? (
           <Badge value="Google Account is Authorised" color="primary" />
         ) : (
@@ -83,7 +83,7 @@ export default function HomeScreen({ navigation }) {
         value={homeAddress}
         onChange={setHomeAddress}
       />
-      {isPublished ? <ActivityCards /> : <ActivityForm />}
+      {isPublished ? <ActivityCards /> : <ActivityForm homeAddress={homeAddress} />}
       {/* </Card> */}
       <StatusBar style="auto" />
     </View>

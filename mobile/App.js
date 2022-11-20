@@ -36,7 +36,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
     <NavigationContainer>
       <Stack.Navigator>
-        {true ? (
+        {phone_number ? (
           <>
           <Stack.Screen
             name="Registration"

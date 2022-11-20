@@ -41,7 +41,7 @@ if (Platform.OS === "ios") {
   // you probably won't end up here unless you support another platform!
 }
 
-export default function ActivityCards({ navigation }) {
+export default function ActivityCards({ navigation, homeAddress }) {
   // const [date, setDate] = useState(new Date())
   // const [open, setOpen] = useState(false)
   // const [date, setDate] = useState(new Date())
@@ -199,7 +199,7 @@ export default function ActivityCards({ navigation }) {
                     ),
                     end_time: moment(value.end_time).format("YYYY-M-D H:mm:s"),
                   }));
-                  const generatedSchedule = await generateSchedule(payload);
+                  const generatedSchedule = await generateSchedule(payload, homeAddress);
                   setGeneratedSchedule(generatedSchedule);
                 }}
               >
@@ -299,7 +299,6 @@ export default function ActivityCards({ navigation }) {
                       ref={mapRef}
                       style={styles.map}
                       showsUserLocation
-                      followsUserLocation
                       onPoiClick={
                         ({
                           nativeEvent: {

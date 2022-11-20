@@ -139,7 +139,7 @@ def make_activity_objects(activities):
             end_time = datetime.strptime(act["end_time"], "%Y-%m-%d %H:%M:%S")
         duration = None
         if act["duration"] != None and act["duration"] != '':
-            duration = timedelta(minutes=act["duration"])
+            duration = timedelta(minutes=int(act["duration"]))
         processed_act = Activity(name=name, start_time=start_time, end_time=end_time, duration=duration, location=location)
         processed_activities.append(processed_act)
     return processed_activities
