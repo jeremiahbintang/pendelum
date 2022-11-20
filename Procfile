@@ -1,1 +1,1 @@
-web: cd scheduler/ gunicorn scheduler:app
+web: cd scheduler/ && gunicorn scheduler:app
