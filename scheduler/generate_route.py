@@ -4,7 +4,7 @@ import pprint
 from datetime import datetime
 
 def generate_route(start, dest, time=None, arrival_time=False):
-    print(start,)
+    
     # transfer the start and dest address to latitude, longitude coordinate
     start_coordinates = (get_locations(start)[0]['latitude'], get_locations(start)[0]['longitude'])
     dest_coordinates = (get_locations(dest)[0]['latitude'], get_locations(dest)[0]['longitude'])
@@ -43,10 +43,10 @@ def generate_route(start, dest, time=None, arrival_time=False):
     platform = []
     departures = []
     arrivals = []
-    name_of_station_start = None
+    name_of_station_start = []
     lock1 = 0
     lock2 = 0
-    name_of_station_dest = None
+    name_of_station_dest = []
     
     for i in range(len(routes[route_choose]["connectionPartList"])):
         mod = routes[route_choose]["connectionPartList"][i]["connectionPartType"]
@@ -63,20 +63,20 @@ def generate_route(start, dest, time=None, arrival_time=False):
             platform.append("")
         
         if "departure" in routes[route_choose]["connectionPartList"][i]:
-            departures.append(datetime.fromtimestamp(routes[route_choose]["connectionPartList"][i]["departure"] / 1000).strftime("%Y-%m-%d %H:%M:%S"))
+            departures.append(datetime.fromtimestamp(routes[route_choose]["connectionPartList"][i]["departure"] / 1000))
         
         if "arrival" in routes[route_choose]["connectionPartList"][i]:
-            arrivals.append(datetime.fromtimestamp(routes[route_choose]["connectionPartList"][i]["arrival"] / 1000).strftime("%Y-%m-%d %H:%M:%S"))
+            arrivals.append(datetime.fromtimestamp(routes[route_choose]["connectionPartList"][i]["arrival"] / 1000))
 
         if "name" in routes[route_choose]["connectionPartList"][i]["from"]:
-            if lock1 == 0:
-                name_of_station_start = routes[route_choose]["connectionPartList"][i]["from"]["name"]
-                lock1 = 1
+            name_of_station_start.append(routes[route_choose]["connectionPartList"][i]["from"]["name"])
+        else:
+            name_of_station_start.append("")
 
-        if "name" in routes[route_choose]["connectionPartList"][-1-i]["to"]:
-            if lock2 == 0:
-                name_of_station_dest = routes[route_choose]["connectionPartList"][-1-i]["to"]["name"]
-                lock2 = 1
+        if "name" in routes[route_choose]["connectionPartList"][i]["to"]:
+            name_of_station_dest.append(routes[route_choose]["connectionPartList"][i]["to"]["name"])
+        else:
+            name_of_station_dest.append("")
 	    
 #     route_json = pprint.pformat(routes[-1]).replace("'", '"')
 #     with open('route.json', 'w') as f:
