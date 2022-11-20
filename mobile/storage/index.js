@@ -167,8 +167,7 @@ const updateTodayActivity = async (_id, activity) => {
     const activities = await getData("today_activities");
     const activitiesJSON = JSON.parse(activities);
     const index = activitiesJSON?.findIndex((val) => val._id === _id)
-    
-    if (index) {
+    if (index > -1) {
       activitiesJSON[index] = activity;
       await saveTodayActivities(activitiesJSON)
     }

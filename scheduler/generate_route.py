@@ -4,7 +4,7 @@ import pprint
 from datetime import datetime
 
 def generate_route(start, dest, time=None, arrival_time=False):
-    
+    print(start,)
     # transfer the start and dest address to latitude, longitude coordinate
     start_coordinates = (get_locations(start)[0]['latitude'], get_locations(start)[0]['longitude'])
     dest_coordinates = (get_locations(dest)[0]['latitude'], get_locations(dest)[0]['longitude'])
@@ -24,7 +24,7 @@ def generate_route(start, dest, time=None, arrival_time=False):
     else:
         for j in range(len(routes)):
             end_time = routes[-1-j]["arrival_datetime"]
-            if end_time < time:
+            if end_time <= time:
                 route_choose = -1-j
                 break
 
@@ -63,10 +63,10 @@ def generate_route(start, dest, time=None, arrival_time=False):
             platform.append("")
         
         if "departure" in routes[route_choose]["connectionPartList"][i]:
-            departures.append(datetime.fromtimestamp(routes[route_choose]["connectionPartList"][i]["departure"] / 1000))
+            departures.append(datetime.fromtimestamp(routes[route_choose]["connectionPartList"][i]["departure"] / 1000).strftime("%Y-%m-%d %H:%M:%S"))
         
         if "arrival" in routes[route_choose]["connectionPartList"][i]:
-            arrivals.append(datetime.fromtimestamp(routes[route_choose]["connectionPartList"][i]["arrival"] / 1000))
+            arrivals.append(datetime.fromtimestamp(routes[route_choose]["connectionPartList"][i]["arrival"] / 1000).strftime("%Y-%m-%d %H:%M:%S"))
 
         if "name" in routes[route_choose]["connectionPartList"][i]["from"]:
             if lock1 == 0:
@@ -93,7 +93,6 @@ def generate_route(start, dest, time=None, arrival_time=False):
             "arrivals": arrivals,
             "duration": end_time - start_time
     }
-
 
 
 

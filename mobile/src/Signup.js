@@ -29,7 +29,7 @@ export default function Signup({ navigation }) {
           borderRadius: 20
         }}>
           <Text h3 style={{ textAlign: "center" }}>
-            Create Accout
+            Create Account
           </Text>
           <Input
             ref={input}

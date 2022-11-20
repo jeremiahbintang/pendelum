@@ -28,6 +28,18 @@ import {
   listCalendarsFromGoogle,
 } from "../google-calendar";
 import { Badge } from "@rneui/base";
+import { Platform } from "react-native";
+if (Platform.OS === "ios") {
+  const platform_os = "ios";
+  // do something for ios
+} else if (Platform.OS === "android") {
+  const platform_os = "droid";
+  // other thing for android
+} else if (Platform.OS === "web") {
+  const platform_os = "web";
+} else {
+  // you probably won't end up here unless you support another platform!
+}
 
 export default function ActivityCards({ navigation }) {
   // const [date, setDate] = useState(new Date())
@@ -62,6 +74,7 @@ export default function ActivityCards({ navigation }) {
   const [calendars, setCalendars] = useState([]);
   const [isPublishClicked, setIsPublishedClicked] = useState(false);
   const [mapMarker, setMapMarker] = useState(null);
+  const [generatedSchedule, setGeneratedSchedule] = useState(null);
 
   const publishEventsToGoogleCalendar = async (calendarId) => {
     if (Object.keys(activities).length > 0) {
@@ -94,6 +107,7 @@ export default function ActivityCards({ navigation }) {
   useEffect(() => {
     const fetch = async () => {
       const activities = await getTodayActivities();
+      console.log(activities)
       if (activities) {
         const formValues = { ...activities };
         setActivities(formValues);
@@ -119,9 +133,6 @@ export default function ActivityCards({ navigation }) {
     })();
   }, []);
 
-  useEffect(() => {
-    console.log(mapMarker);
-  }, [mapMarker]);
   return (
     <ScrollView
       style={styles.scrollView}
@@ -149,7 +160,7 @@ export default function ActivityCards({ navigation }) {
                     [newKey]: {
                       start_time: new Date(),
                       end_time: new Date(),
-                      duration: null,
+                      duration: "",
                       name: "",
                       location: "",
                     },
@@ -184,7 +195,7 @@ export default function ActivityCards({ navigation }) {
                     end_time: moment(value.end_time).format("YYYY-M-D H:mm:s"),
                   }));
                   const generatedSchedule = generateSchedule(payload);
-                  console.log(generatedSchedule);
+                  setGeneratedSchedule(generateSchedule)
                 }}
               >
                 Schedule it for me!
@@ -211,6 +222,15 @@ export default function ActivityCards({ navigation }) {
                 Publish!
               </Button>
             </View>
+            {generatedSchedule.map((plan, i) => (
+              <React.Fragment key={i}>
+                <Text h3>{i+1}. {plan.name}</Text>
+                <View style={styles.row}>
+                  <Text>{plan.start_time}</Text>
+                  <Text>{plan.end_time}</Text>
+                </View>
+              </React.Fragment>
+            ))}
             {Object.entries(values).map(([key, value]) => (
               <ListItem.Accordion
                 key={key}
@@ -305,16 +325,25 @@ export default function ActivityCards({ navigation }) {
                         editable={false}
                         value={new Date(value.start_time).toLocaleTimeString()}
                       />
-                      <Button
-                        onPress={() => {
-                          setShowStartTimeDatePicker({
-                            ...showStartTimeDatePicker,
-                            [key]: !showStartTimeDatePicker[key],
-                          });
+                      <View
+                        style={{
+                          position: "absolute",
+                          right: 10,
+                          bottom: 30,
+                          alignSelf: "flex-end",
                         }}
                       >
-                        Input
-                      </Button>
+                        <Button
+                          onPress={() => {
+                            setShowStartTimeDatePicker({
+                              ...showStartTimeDatePicker,
+                              [key]: !showStartTimeDatePicker[key],
+                            });
+                          }}
+                        >
+                          Input
+                        </Button>
+                      </View>
                     </View>
                     {showStartTimeDatePicker[key] && (
                       <DateTimePicker
@@ -336,16 +365,25 @@ export default function ActivityCards({ navigation }) {
                         editable={false}
                         value={new Date(value.end_time).toLocaleTimeString()}
                       />
-                      <Button
-                        onPress={() => {
-                          setShowEndTimeDatePicker({
-                            ...showEndTimeDatePicker,
-                            [key]: !showEndTimeDatePicker[key],
-                          });
+                      <View
+                        style={{
+                          position: "absolute",
+                          right: 10,
+                          bottom: 30,
+                          alignSelf: "flex-end",
                         }}
                       >
-                        Input
-                      </Button>
+                        <Button
+                          onPress={() => {
+                            setShowEndTimeDatePicker({
+                              ...showEndTimeDatePicker,
+                              [key]: !showEndTimeDatePicker[key],
+                            });
+                          }}
+                        >
+                          Input
+                        </Button>
+                      </View>
                     </View>
                     {showEndTimeDatePicker[key] && (
                       <DateTimePicker
@@ -370,6 +408,7 @@ export default function ActivityCards({ navigation }) {
                     <Button
                       /*style={styles.button}*/
                       onPress={async () => {
+                        console.info(value)
                         if (value._id) {
                           await updateTodayActivity(value._id, value);
                         } else {

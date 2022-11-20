@@ -21,7 +21,8 @@ const generateSchedule = async (activities) => {
       console.log(response)
       return response.json()})
     .then((json) => {
-      return json.data;
+      console.log(json)
+      return json;
     })
     .catch((error) => {
       console.log(error);
