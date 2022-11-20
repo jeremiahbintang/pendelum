@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Formik } from "formik";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { StyleSheet, Dimensions, View, SafeAreaView, ScrollView, StatusBar } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import DateTimePicker from "@react-native-community/datetimepicker";
+// import DatePicker from 'react-native-date-picker'
 import {
   getCalendarList,
   getTodayActivities,
@@ -12,15 +13,33 @@ import {
   updateTodayActivity,
   saveChosenCalendar,
 } from "../storage";
-import { Input, Button, Text, ListItem, Icon } from "@rneui/themed";
+import { Input, Button, Text, ListItem, Icon, Card } from "@rneui/themed";
 import { generateSchedule } from "../api";
 import {
   insertEventToGoogleCalendar,
   listCalendarsFromGoogle,
 } from "../google-calendar";
 import { Badge } from "@rneui/base";
+import { Platform } from 'react-native';
+if (Platform.OS === 'ios') {
+  const platform_os = 'ios'
+  // do something for ios
+} else if (Platform.OS === 'android') {
+  const platform_os = 'droid'
+  // other thing for android
+} else if (Platform.OS === 'web') {
+  const platform_os = 'web'
+} else {
+  // you probably won't end up here unless you support another platform!
+}
+
+
 
 export default function ActivityCards({ navigation }) {
+  // const [date, setDate] = useState(new Date())
+  // const [open, setOpen] = useState(false)
+  // const [date, setDate] = useState(new Date())
+  // const [expanded, setExpanded] = useState({ 0: false });
   const mapRef = useRef();
   const [location, setLocation] = useState({
     latitude: 48.2627156,
@@ -50,18 +69,21 @@ export default function ActivityCards({ navigation }) {
   const [isPublishClicked, setIsPublishedClicked] = useState(false);
   const [mapMarker, setMapMarker] = useState(null);
 
-  const publishEventsToGoogleCalendat = (calendarId) => {
-    const google_event_objects = activities.map((activity) => {
-      return {
-        start: { dateTime: activity.start_time },
-        end: { dateTime: activity.end_time },
-        endTimeUnspecified: !!activity.end_time,
-        summary: activity.name,
-        location: activity.location,
-      };
-    });
+  const publishEventsToGoogleCalendar = async (calendarId) => {
+    if (Object.keys(activities).length > 0) {
+      const google_event_objects = Object.values(activities).map((activity) => {
+        return {
+          start: { dateTime: activity.start_time },
+          end: { dateTime: activity.end_time },
+          endTimeUnspecified: !activity.end_time,
+          summary: activity.name,
+          location: activity.location,
+        };
+      });
 
-    insertEventToGoogleCalendar;
+      await Promise.all(google_event_objects.map((event) => insertEventToGoogleCalendar(calendarId, event)))
+    }
+    ;
   };
 
   useEffect(() => {
@@ -75,8 +97,10 @@ export default function ActivityCards({ navigation }) {
   useEffect(() => {
     const fetch = async () => {
       const activities = await getTodayActivities();
-      const formValues = { ...activities };
-      setActivities(formValues);
+      if (activities) {
+        const formValues = { ...activities };
+        setActivities(formValues);
+      }
     };
     fetch();
   }, [runFetch]);
@@ -98,248 +122,292 @@ export default function ActivityCards({ navigation }) {
     })();
   }, []);
 
-  useEffect(() => {console.log(mapMarker)}, [mapMarker])
+  useEffect(() => { console.log(mapMarker) }, [mapMarker])
   return (
-    <Formik initialValues={activities} enableReinitialize>
-      {({ handleChange, setValues, setFieldValue, values }) => (
-        <View>
-          <Text h4>Add your activity for today!</Text>
-          {Object.entries(values).map(([key, value]) => (
-            <ListItem.Accordion
-              key={key}
-              content={<Text h3>{value.name || "Activity"}</Text>}
-              isExpanded={expanded[key]}
-              onPress={() => {
-                setExpanded({ ...expanded, [key]: !expanded[key] });
-              }}
-            >
-              <ListItem>
-                <ListItem.Content bottomDivider>
-                  <Input
-                    placeholder="Input name of activity"
-                    onChangeText={handleChange(`${key}.name`)}
-                    value={value.name}
-                  />
-                  <Input
-                    placeholder="Input location"
-                    onChangeText={handleChange(`${key}.location`)}
-                    value={value.location?.name}
-                    editable={false}
-                  />
-                  <MapView
-                    ref={mapRef}                    
-                    style={styles.map}
-                    showsUserLocation
-                    followsUserLocation
-                    onPoiClick={({
-                      nativeEvent: {
-                        coordinate: { latitude, longitude },
-                        name,
-                        placeId
-                      },
-                    }) =>{
-                      setMapMarker({
-                        latitude,
-                        longitude,
-                        latitudeDelta: 0.01,
-                        longitudeDelta: 0.01,
-                      })
-                      setFieldValue(`${key}.location`, {
-                        name, latitude, longitude, placeId
-                      })}
-                    }
-                    onMarkerPress={(e) => {console.log(e)}}
-                    onPress={async ({
-                      nativeEvent: {
-                        coordinate: { latitude, longitude },
-                      },
-                    }) =>{
-                      setMapMarker({
-                        latitude,
-                        longitude,
-                        latitudeDelta: 0.01,
-                        longitudeDelta: 0.01,
-                      })
-                      const address = await mapRef.current?.addressForCoordinate({
-                        latitude,
-                        longitude
-                      })
-                      console.log(address)
-                      setFieldValue(`${key}.location`, {
-                        name: address.subThoroughfare ? address.thoroughfare + " " + address.subThoroughfare : address.thoroughfare, latitude, longitude
-                      })}
+    <ScrollView
+      style={styles.scrollView}
+      automaticallyAdjustContentInsets={true}
+      automaticallyAdjustKeyboardInsets={true}
+    >
+      <Formik initialValues={activities} enableReinitialize>
+        {({ handleChange, setValues, setFieldValue, values }) => (
+          <View>
 
-                    
-                    }
-                    initialRegion={location}
-                  >
-                    {mapMarker && <Marker coordinate={mapMarker} />}
-                  </MapView>
-                  <View style={styles.row}>
+            <Text h4>
+              Add your activity for today
+            </Text>
+            <View style={styles.row}>
+              <Button
+                type="solid"
+                buttonStyle={{
+                  backgroundColor: 'black',
+                  borderWidth: 2,
+                  borderColor: 'black',
+                  borderRadius: 30,
+                  marginVertical: 5,
+                }}
+                onPress={() => {
+                  const newKey = Object.keys(values).length;
+                  setValues({
+                    ...values,
+                    [newKey]: {
+                      start_time: new Date(),
+                      end_time: new Date(),
+                      duration: "",
+                      name: "",
+                      location: "",
+                    },
+                  });
+                  setExpanded({
+                    ...expanded,
+                    [newKey - 1]: false,
+                    [newKey]: true,
+                  });
+                }}
+              >
+                <Icon name="add" color="white" />
+              </Button>
+              <Button
+                containerStyle={{
+                  marginLeft: 5,
+                }}
+                type="solid"
+                buttonStyle={{
+                  backgroundColor: 'black',
+                  borderWidth: 2,
+                  borderColor: 'black',
+                  borderRadius: 30,
+                  marginVertical: 5,
+                }}
+                onPress={async () => {
+                  const generatedSchedule = await generateSchedule({
+                    data: Object.values(values),
+                  });
+                  console.log(generatedSchedule);
+                }}
+              >
+                Schedule it for me!
+              </Button>
+              <Button
+                containerStyle={{
+                  marginLeft: 5,
+                }}
+                type="solid"
+                buttonStyle={{
+                  backgroundColor: 'black',
+                  borderWidth: 2,
+                  borderColor: 'black',
+                  borderRadius: 30,
+                  marginVertical: 5,
+                }}
+                onPress={async () => {
+                  const calendars = await listCalendarsFromGoogle();
+                  await saveCalendarList(calendars);
+                  setCalendars(calendars);
+                  setIsPublishedClicked(true);
+                }}
+              >
+                Publish!
+              </Button>
+            </View>
+            {Object.entries(values).map(([key, value]) => (
+              <ListItem.Accordion
+                key={key}
+                content={<Text h3>{value.name || "Activity"}</Text>}
+                isExpanded={expanded[key]}
+                onPress={() => {
+                  setExpanded({ ...expanded, [key]: !expanded[key] });
+                }}
+                borderWidth={1}
+                borderRadius={2}
+              >
+                <ListItem borderWidth={1} borderRadius={0}>
+                  <ListItem.Content bottomDivider>
                     <Input
-                      placeholder="Input start time"
-                      editable={false}
-                      value={value.start_time.toLocaleTimeString()}
+                      placeholder="Input name of activity"
+                      onChangeText={handleChange(`${key}.name`)}
+                      value={value.name}
                     />
-                    <Button
-                      onPress={() =>
-                        setShowStartTimeDatePicker({
-                          ...showStartTimeDatePicker,
-                          [key]: !showStartTimeDatePicker[key],
+                    <MapView
+                      ref={mapRef}
+                      style={styles.map}
+                      showsUserLocation
+                      followsUserLocation
+                      onPoiClick={({
+                        nativeEvent: {
+                          coordinate: { latitude, longitude },
+                          name,
+                          placeId
+                        },
+                      }) => {
+                        setMapMarker({
+                          latitude,
+                          longitude,
+                          latitudeDelta: 0.01,
+                          longitudeDelta: 0.01,
                         })
+                        setFieldValue(`${key}.location`, name)
                       }
-                    >
-                      Input
-                    </Button>
-                  </View>
+                        // setFieldValue(`${key}.location`, {
+                        //   name, latitude, longitude, placeId
+                        // })}
+                      }
+                      onMarkerPress={(e) => { console.log(e) }}
+                      onPress={async ({
+                        nativeEvent: {
+                          coordinate: { latitude, longitude },
+                        },
+                      }) => {
+                        setMapMarker({
+                          latitude,
+                          longitude,
+                          latitudeDelta: 0.01,
+                          longitudeDelta: 0.01,
+                        })
+                        const address = await mapRef.current?.addressForCoordinate({
+                          latitude,
+                          longitude
+                        })
+                        setFieldValue(`${key}.location`, address.subThoroughfare ? address.thoroughfare + " " + address.subThoroughfare : address.thoroughfare)
+                      }
 
-                  {showStartTimeDatePicker[key] && (
-                    <DateTimePicker
-                      mode="time"
-                      value={value.start_time}
-                      onChange={(event, time) => {
+                        // setFieldValue(`${key}.location`, {
+                        //   name: address.subThoroughfare ? address.thoroughfare + " " + address.subThoroughfare : address.thoroughfare, latitude, longitude
+                        // })}                    
+                      }
+                      initialRegion={location}
+                    >
+                      {mapMarker && <Marker coordinate={mapMarker} />}
+                    </MapView>
+                    <Input
+                      placeholder="Specify Your location On the Map"
+                      onChangeText={handleChange(`${key}.location`)}
+                      value={value.location?.name}
+                      editable={false}
+                      disabled={true}
+                    />
+                    <Input
+                      placeholder="Input name of activity"
+                      onChangeText={handleChange(`${key}.name`)}
+                      value={value.name}
+                    />
+                    <Input
+                      placeholder="Input location"
+                      onChangeText={handleChange(`${key}.location`)}
+                      value={value.location}
+                    />
+                    <View style={styles.row}>
+                      <Input
+                        placeholder="Input start time"
+                        editable={false}
+                        value={value.start_time.toLocaleTimeString()}
+                      />
+                      <View style={{position:'absolute',right: 10, bottom: 30, alignSelf:'flex-end'}}>
+                      <Button onPress={() => {
                         setShowStartTimeDatePicker({
                           ...showStartTimeDatePicker,
                           [key]: !showStartTimeDatePicker[key],
                         });
-                        setFieldValue(`${key}.start_time`, time);
-                        console.info(time);
-                      }}
-                    />
-                  )}
-                  <View style={styles.row}>
-                    <Input
-                      placeholder="Input end time"
-                      editable={false}
-                      value={value.end_time.toLocaleTimeString()}
-                    />
-                    <Button
-                      onPress={() =>
-                        setShowEndTimeDatePicker({
-                          ...showEndTimeDatePicker,
-                          [key]: !showEndTimeDatePicker[key],
-                        })
-                      }
-                    >
-                      Input
-                    </Button>
-                  </View>
-                  {showEndTimeDatePicker[key] && (
-                    <DateTimePicker
-                      mode="time"
-                      value={value.end_time}
-                      onChange={(event, time) => {
+                      }}>
+                        Input
+                      </Button>
+                    </View>
+                    </View>
+                    {showStartTimeDatePicker[key] && (
+                      <DateTimePicker
+                        mode="time"
+                        value={value.start_time}
+                        onChange={(event, time) => {
+                          setShowStartTimeDatePicker({
+                            ...showStartTimeDatePicker,
+                            [key]: !showStartTimeDatePicker[key],
+                          });
+                          setFieldValue(`${key}.start_time`, time);
+                          console.info(time);
+                        }}
+                      />
+                    )}
+                    <View style={styles.row}>
+                      <Input
+                        placeholder="Input end time"
+                        editable={false}
+                        value={value.end_time.toLocaleTimeString()}
+                      />
+                      <View style={{position:'absolute',right: 10, bottom: 30, alignSelf:'flex-end'}}>
+                      <Button onPress={() => {
                         setShowEndTimeDatePicker({
                           ...showEndTimeDatePicker,
                           [key]: !showEndTimeDatePicker[key],
                         });
-                        setFieldValue(`${key}.end_time`, time);
-                        console.info(value.end_time);
-                      }}
+                      }}>
+                        Input
+                      </Button>
+                      </View>
+                    </View>
+                    {showEndTimeDatePicker[key] && (
+                      <DateTimePicker
+                        mode="time"
+                        value={value.end_time}
+                        onChange={(event, time) => {
+                          setShowEndTimeDatePicker({
+                            ...showEndTimeDatePicker,
+                            [key]: !showEndTimeDatePicker[key],
+                          });
+                          setFieldValue(`${key}.end_time`, time);
+                          console.info(value.end_time);
+                        }}
+                      />
+                    )}
+                    <Input
+                      keyboardType="numeric"
+                      placeholder="Input duration (minutes)"
+                      onChangeText={handleChange(`${key}.duration`)}
+                      value={value.duration}
                     />
-                  )}
-                  <Input
-                    keyboardType="numeric"
-                    placeholder="Input duration (minutes)"
-                    onChangeText={handleChange(`${key}.duration`)}
-                    value={value.duration}
-                  />
-                  <Button
-                    style={styles.button}
-                    onPress={async () => {
-                      if (value._id) {
-                        await updateTodayActivity(value._id, value);
-                      } else {
-                        await saveTodayActivity(value);
-                      }
-                      setRunFetch(runFetch + 1);
-                    }}
-                  >
-                    Add
-                  </Button>
-                </ListItem.Content>
-              </ListItem>
-            </ListItem.Accordion>
-          ))}
-          <View style={styles.row}>
-            <Button
-              type="solid"
-              onPress={() => {
-                const newKey = Object.keys(values).length;
-                setValues({
-                  ...values,
-                  [newKey]: {
-                    start_time: new Date(),
-                    end_time: new Date(),
-                    duration: "",
-                    name: "",
-                    location: "",
-                  },
-                });
-                setExpanded({
-                  ...expanded,
-                  [newKey - 1]: false,
-                  [newKey]: true,
-                });
-              }}
-            >
-              <Icon name="add" color="white" />
-            </Button>
-            <Button
-              containerStyle={{
-                marginLeft: 5,
-              }}
-              type="solid"
-              onPress={async () => {
-                const generatedSchedule = await generateSchedule({
-                  data: Object.values(values),
-                });
-                console.log(generatedSchedule);
-              }}
-            >
-              Schedule it for me!
-            </Button>
-            <Button
-              containerStyle={{
-                marginLeft: 5,
-              }}
-              type="solid"
-              onPress={async () => {
-                const calendars = await listCalendarsFromGoogle();
-                await saveCalendarList(calendars);
-                setCalendars(calendars);
-                setIsPublishedClicked(true);
-              }}
-            >
-              Publish!
-            </Button>
+                    <Button
+                      /*style={styles.button}*/
+                      onPress={async () => {
+                        if (value._id) {
+                          await updateTodayActivity(value._id, value);
+                        } else {
+                          await saveTodayActivity(value);
+                        }
+                        setRunFetch(runFetch + 1);
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </ListItem.Content>
+                </ListItem>
+              </ListItem.Accordion>
+            ))}
+            <View style={styles.calendars}>
+              {isPublishClicked && calendars?.length > 0 && (
+                <Text>Choose which calendar to update</Text>
+              )}
+              {isPublishClicked &&
+                calendars?.map((cal) => (
+                  <View key={cal.id} style={styles.row}>
+                    <Button
+                      containerStyle={{
+                        marginBottom: 10,
+                      }}
+                      type="solid"
+                      onPress={async () => {
+                        await saveChosenCalendar(cal);
+                        publishEventsToGoogleCalendar(cal.id);
+                      }}
+                    >
+                      {cal.summary}
+                      {cal.primary && <Badge value="primary" status="primary" />}
+                    </Button>
+                  </View>
+                ))}
+            </View>
           </View>
-          <View style={styles.calendars}>
-            {isPublishClicked && calendars.length > 0 && (
-              <Text>Choose which calendar to update</Text>
-            )}
-            {isPublishClicked &&
-              calendars.map((cal) => (
-                <View key={cal.id} style={styles.row}>
-                  <Button
-                    containerStyle={{
-                      marginBottom: 10,
-                    }}
-                    type="solid"
-                    onPress={async () => {
-                      await saveChosenCalendar(cal);
-                      publishEventsToGoogleCalendat(calendarId);
-                    }}
-                  >
-                    {cal.summary}
-                    {cal.primary && <Badge value="primary" status="primary" />}
-                  </Button>
-                </View>
-              ))}
-          </View>
-        </View>
-      )}
-    </Formik>
+        )}
+      </Formik>
+    </ScrollView>
   );
 }
 
@@ -366,9 +434,9 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
   },
   button: {
-    width: "50px",
-    height: "50px",
-    fontSize: "10px",
+    width: 50,
+    height: 50,
+    fontSize: 10,
   },
   map: {
     width: Dimensions.get("window").width,
