@@ -29,7 +29,11 @@ def generate_route(start, dest, time=None, arrival_time=False):
                 break
 
     # 	start_time:
-    start_time = routes[route_choose]["departure_datetime"]
+    start_time = None
+    if arrival_time == False:
+        start_time = time
+    else:
+        start_time = routes[route_choose]["departure_datetime"]
     # 	end_time: 
     end_time = routes[route_choose]["arrival_datetime"]
 

@@ -75,14 +75,10 @@ class Schedule:
                 a = prev_act.end_time
             else:
                 a = prev_act.travel_plan.arrivals[-1]
-            
-            print("a", a)
-            
+
             b = next_act.start_time
-            print("b", b)
                 
             duration = (b - a).seconds
-            print("duration", duration)
             if duration < 0:
                 duration = 0
                 
@@ -192,7 +188,7 @@ def create_schedule(todo_activities, uni_activities, start_station, end_station,
                     
                 travel_time2 = 0
                 if act.location != slot.next_activity.location:
-                    route = generate_route(start=act.location, dest=slot.next_activity.location, time=slot.start_time+travel_time1+act.duration, arrival_time=False)
+                    route = generate_route(start=act.location, dest=slot.next_activity.location, time=slot.prev_activity.travel_plan.arrivals[-1]+act.duration, arrival_time=False)
                     travel_time2 = route["duration"]
                     route2 = TravelPlan(model=route["model"], station_line=route["station_line"], platform=route["platform"], start_station=route["start_station"], end_station=route["end_station"], departures=route["departures"], arrivals=route["arrivals"])
                                
@@ -205,12 +201,10 @@ def create_schedule(todo_activities, uni_activities, start_station, end_station,
         
         elif act.priority == 3:
             for slot in empty_slots:
+                if slot.end_time < slot.start_time:
+                    slot.end_time = slot.start_time
                 slot_duration = (slot.end_time - slot.start_time).seconds
-                print("slot start time", slot.start_time)
-                print("slot end time", slot.end_time)
                 if act.duration.seconds < slot_duration:
-                    print(slot.prev_activity.name)
-                    print(slot.next_activity.name)
                     schedule.add_activity(Activity(name=act.name, start_time=slot.start_time, duration=act.duration))
                     break
     
