@@ -257,7 +257,7 @@ export default function ActivityCards({ navigation }) {
                     {mapMarker && <Marker coordinate={mapMarker} />}
                   </MapView>
                   <Input
-                    placeholder="Input location"
+                    placeholder="Specify Your location On the Map"
                     onChangeText={handleChange(`${key}.location`)}
                     value={value.location?.name}
                     editable={false}
