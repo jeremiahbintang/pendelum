@@ -83,6 +83,7 @@ export default function HomeScreen({ navigation }) {
         onChange={setHomeAddress}
       />
       {isPublished ? <ActivityCards /> : <ActivityForm />}
+      {/* </Card> */}
       <StatusBar style="auto" />
     </View>
   );

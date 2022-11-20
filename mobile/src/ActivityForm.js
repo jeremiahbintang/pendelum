@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Formik } from "formik";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { StyleSheet, Dimensions, View, SafeAreaView, ScrollView, StatusBar } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import DateTimePicker from "@react-native-community/datetimepicker";
+// import DatePicker from 'react-native-date-picker'
 import {
   getCalendarList,
   getTodayActivities,
@@ -12,7 +13,7 @@ import {
   updateTodayActivity,
   saveChosenCalendar,
 } from "../storage";
-import { Input, Button, Text, ListItem, Icon } from "@rneui/themed";
+import { Input, Button, Text, ListItem, Icon, Card } from "@rneui/themed";
 import { generateSchedule } from "../api";
 import {
   insertEventToGoogleCalendar,
@@ -21,6 +22,10 @@ import {
 import { Badge } from "@rneui/base";
 
 export default function ActivityCards({ navigation }) {
+  // const [date, setDate] = useState(new Date())
+  // const [open, setOpen] = useState(false)
+  // const [date, setDate] = useState(new Date())
+  // const [expanded, setExpanded] = useState({ 0: false });
   const mapRef = useRef();
   const [location, setLocation] = useState({
     latitude: 48.2627156,
@@ -105,11 +110,93 @@ export default function ActivityCards({ navigation }) {
 
   useEffect(() => {console.log(mapMarker)}, [mapMarker])
   return (
-    <Formik initialValues={activities} enableReinitialize>
-      {({ handleChange, setValues, setFieldValue, values }) => (
-        <View>
-          <Text h4>Add your activity for today!</Text>
-          {Object.entries(values).map(([key, value]) => (
+    <ScrollView
+      style={styles.scrollView}
+      automaticallyAdjustContentInsets={true}
+      automaticallyAdjustKeyboardInsets={true}
+    >
+      <Formik initialValues={activities} enableReinitialize>
+        {({ handleChange, setValues, setFieldValue, values }) => (
+          <View>
+            
+            <Text h4>
+              Add your activity for today
+            </Text>
+            <View style={styles.row}>
+            <Button
+              type="solid"
+              buttonStyle={{
+                backgroundColor: 'black',
+                borderWidth: 2,
+                borderColor: 'black',
+                borderRadius: 30,
+                marginVertical: 5,
+              }}
+              onPress={() => {
+                const newKey = Object.keys(values).length;
+                setValues({
+                  ...values,
+                  [newKey]: {
+                    start_time: new Date(),
+                    end_time: new Date(),
+                    duration: "",
+                    name: "",
+                    location: "",
+                  },
+                });
+                setExpanded({
+                  ...expanded,
+                  [newKey - 1]: false,
+                  [newKey]: true,
+                });
+              }}
+            >
+              <Icon name="add" color="white" />
+            </Button>
+            <Button
+              containerStyle={{
+                marginLeft: 5,
+              }}
+              type="solid"
+              buttonStyle={{
+                backgroundColor: 'black',
+                borderWidth: 2,
+                borderColor: 'black',
+                borderRadius: 30,
+                marginVertical: 5,
+              }}
+              onPress={async () => {
+                const generatedSchedule = await generateSchedule({
+                  data: Object.values(values),
+                });
+                console.log(generatedSchedule);
+              }}
+            >
+              Schedule it for me!
+            </Button>
+            <Button
+              containerStyle={{
+                marginLeft: 5,
+              }}
+              type="solid"
+              buttonStyle={{
+                backgroundColor: 'black',
+                borderWidth: 2,
+                borderColor: 'black',
+                borderRadius: 30,
+                marginVertical: 5,
+              }}
+              onPress={async () => {
+                const calendars = await listCalendarsFromGoogle();
+                await saveCalendarList(calendars);
+                setCalendars(calendars);
+                setIsPublishedClicked(true);
+              }}
+            >
+              Publish!
+            </Button>
+          </View>
+            {Object.entries(values).map(([key, value]) => (
             <ListItem.Accordion
               key={key}
               content={<Text h3>{value.name || "Activity"}</Text>}
@@ -117,31 +204,15 @@ export default function ActivityCards({ navigation }) {
               onPress={() => {
                 setExpanded({ ...expanded, [key]: !expanded[key] });
               }}
+              borderWidth={1}
+              borderRadius={2}
             >
-              <ListItem>
-                <ListItem.Content bottomDivider><Button
-                    style={styles.button}
-                    onPress={async () => {
-                      if (value._id) {
-                        await updateTodayActivity(value._id, value);
-                      } else {
-                        await saveTodayActivity(value);
-                      }
-                      setRunFetch(runFetch + 1);
-                    }}
-                  >
-                    Add
-                  </Button>
+              <ListItem borderWidth={1} borderRadius={0}>
+                <ListItem.Content bottomDivider>
                   <Input
                     placeholder="Input name of activity"
                     onChangeText={handleChange(`${key}.name`)}
                     value={value.name}
-                  />
-                  <Input
-                    placeholder="Input location"
-                    onChangeText={handleChange(`${key}.location`)}
-                    value={value.location}
-                    editable={false}
                   />
                   <MapView
                     ref={mapRef}                    
@@ -192,145 +263,102 @@ export default function ActivityCards({ navigation }) {
                   >
                     {mapMarker && <Marker coordinate={mapMarker} />}
                   </MapView>
-                  <View style={styles.row}>
-                    <Input
-                      placeholder="Input start time"
-                      editable={false}
-                      value={new Date(value.start_time).toLocaleTimeString()}
-                    />
-                    <Button
-                      onPress={() =>
-                        setShowStartTimeDatePicker({
-                          ...showStartTimeDatePicker,
-                          [key]: !showStartTimeDatePicker[key],
-                        })
-                      }
-                    >
-                      Input
-                    </Button>
-                  </View>
-
-                  {showStartTimeDatePicker[key] && (
-                    <DateTimePicker
-                      mode="time"
-                      value={value.start_time}
-                      onChange={(event, time) => {
-                        setShowStartTimeDatePicker({
-                          ...showStartTimeDatePicker,
-                          [key]: !showStartTimeDatePicker[key],
-                        });
-                        setFieldValue(`${key}.start_time`, time);
-                        console.info(time);
-                      }}
-                    />
-                  )}
-                  <View style={styles.row}>
-                    <Input
-                      placeholder="Input end time"
-                      editable={false}
-                      value={new Date(value.end_time).toLocaleTimeString()}
-                    />
-                    <Button
-                      onPress={() =>
-                        setShowEndTimeDatePicker({
-                          ...showEndTimeDatePicker,
-                          [key]: !showEndTimeDatePicker[key],
-                        })
-                      }
-                    >
-                      Input
-                    </Button>
-                  </View>
-                  {showEndTimeDatePicker[key] && (
-                    <DateTimePicker
-                      mode="time"
-                      value={value.end_time}
-                      onChange={(event, time) => {
-                        setShowEndTimeDatePicker({
-                          ...showEndTimeDatePicker,
-                          [key]: !showEndTimeDatePicker[key],
-                        });
-                        setFieldValue(`${key}.end_time`, time);
-                        console.info(value.end_time);
-                      }}
-                    />
-                  )}
                   <Input
-                    keyboardType="numeric"
-                    placeholder="Input duration (minutes)"
-                    onChangeText={handleChange(`${key}.duration`)}
-                    value={value.duration}
+                    placeholder="Input location"
+                    onChangeText={handleChange(`${key}.location`)}
+                    value={value.location?.name}
+                    editable={false}
+                    disabled={true}
                   />
-                  <Button
-                    style={styles.button}
-                    onPress={async () => {
-                      if (value._id) {
-                        await updateTodayActivity(value._id, value);
-                      } else {
-                        await saveTodayActivity(value);
-                      }
-                      setRunFetch(runFetch + 1);
-                    }}
-                  >
-                    Add
-                  </Button>
-                </ListItem.Content>
-              </ListItem>
+                    <Input
+                      placeholder="Input name of activity"
+                      onChangeText={handleChange(`${key}.name`)}
+                      value={value.name}
+                    />
+                    <Input
+                      placeholder="Input location"
+                      onChangeText={handleChange(`${key}.location`)}
+                      value={value.location}
+                    />
+                    <View style={styles.row}>
+                      <Input
+                        placeholder="Input start time"
+                        editable={false}
+                        value={value.start_time.toLocaleTimeString()}
+                      />
+                      <Button onPress={() => {setShowStartTimeDatePicker({
+                            ...showStartTimeDatePicker,
+                            [key]: !showStartTimeDatePicker[key],
+                          });
+                          }}>
+                        Input
+                      </Button>
+                    </View>
+                    {showStartTimeDatePicker[key] && (
+                      <DateTimePicker
+                        mode="time"
+                        value={value.start_time}
+                        onChange={(event, time) => {
+                          setShowStartTimeDatePicker({
+                            ...showStartTimeDatePicker,
+                            [key]: !showStartTimeDatePicker[key],
+                          });
+                          setFieldValue(`${key}.start_time`, time);
+                          console.info(time);
+                        }}
+                      />
+                    )}
+                    <View style={styles.row}>
+                      <Input
+                        placeholder="Input end time"
+                        editable={false}
+                        value={value.end_time.toLocaleTimeString()}
+                      />
+                      <Button onPress={() => {setShowEndTimeDatePicker({
+                            ...showEndTimeDatePicker,
+                            [key]: !showEndTimeDatePicker[key],
+                          });
+                          }}>
+                        Input
+                      </Button>
+                    </View>
+                    {showEndTimeDatePicker[key] && (
+                      <DateTimePicker
+                        mode="time"
+                        value={value.end_time}
+                        onChange={(event, time) => {
+                          setShowEndTimeDatePicker({
+                            ...showEndTimeDatePicker,
+                            [key]: !showEndTimeDatePicker[key],
+                          });
+                          setFieldValue(`${key}.end_time`, time);
+                          console.info(value.end_time);
+                        }}
+                      />
+                    )}
+                    <Input
+                      keyboardType="numeric"
+                      placeholder="Input duration (minutes)"
+                      onChangeText={handleChange(`${key}.duration`)}
+                      value={value.duration}
+                    />
+                    <Button
+                      /*style={styles.button}*/
+                      onPress={async () => {
+                        if (value._id) {
+                          await updateTodayActivity(value._id, value);
+                        } else {
+                          await saveTodayActivity(value);
+                        }
+                        setRunFetch(runFetch + 1);
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </ListItem.Content>
+                </ListItem>
             </ListItem.Accordion>
           ))}
-          <View style={styles.row}>
-            <Button
-              type="solid"
-              onPress={() => {
-                const newKey = Object.keys(values).length;
-                setValues({
-                  ...values,
-                  [newKey]: {
-                    start_time: new Date(),
-                    end_time: new Date(),
-                    duration: "",
-                    name: "",
-                    location: "",
-                  },
-                });
-                setExpanded({
-                  ...expanded,
-                  [newKey - 1]: false,
-                  [newKey]: true,
-                });
-              }}
-            >
-              <Icon name="add" color="white" />
-            </Button>
-            <Button
-              containerStyle={{
-                marginLeft: 5,
-              }}
-              type="solid"
-              onPress={async () => {
-                const generatedSchedule = await generateSchedule({
-                  data: Object.values(values),
-                });
-                console.log(generatedSchedule);
-              }}
-            >
-              Schedule it for me!
-            </Button>
-            <Button
-              containerStyle={{
-                marginLeft: 5,
-              }}
-              type="solid"
-              onPress={async () => {
-                const calendars = await listCalendarsFromGoogle();
-                await saveCalendarList(calendars);
-                setCalendars(calendars);
-                setIsPublishedClicked(true);
-              }}
-            >
-              Publish!
-            </Button>
-          </View>
           <View style={styles.calendars}>
             {isPublishClicked && calendars?.length > 0 && (
               <Text>Choose which calendar to update</Text>
@@ -357,6 +385,7 @@ export default function ActivityCards({ navigation }) {
         </View>
       )}
     </Formik>
+    </ScrollView>
   );
 }
 
@@ -383,9 +412,9 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
   },
   button: {
-    width: "50px",
-    height: "50px",
-    fontSize: "10px",
+    width: 50,
+    height: 50,
+    fontSize: 10,
   },
   map: {
     width: Dimensions.get("window").width,
